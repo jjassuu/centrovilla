@@ -12,7 +12,7 @@ endif()
 project ("centrovilla")
 
 # Agregue un origen al ejecutable de este proyecto.
-add_executable (centrovilla "centrovilla.cpp" "centrovilla.h")
+add_executable (centrovilla "centrovilla.cpp" "centrovilla.h" "person.cpp" "person.h" "usuarios.h" "usuarios.cpp")
 
 if (CMAKE_VERSION VERSION_GREATER 3.12)
   set_property(TARGET centrovilla PROPERTY CXX_STANDARD 20)
