@@ -5,6 +5,7 @@
 #include <iostream>
 #include <fstream>
 #include <unordered_map>
+#include "cita.h"
 
 // Función para mostrar el menú principal
 void mainMenu() {
@@ -54,9 +55,33 @@ void mainMenu() {
             break;
         }
             break;
-        case 3:
-            std::cout << ".\n";
+        case 3: {
+            int citaOpcion;
+            std::cout << "\n1. Agendar Cita\n2. Ver Todas las Citas\nElige una opción: ";
+            std::cin >> citaOpcion;
+            if (citaOpcion == 1) {
+                int pacienteID, doctorID;
+                std::string fecha, hora;
+                std::cout << "Introduce el DNI del Paciente: ";
+                std::cin >> pacienteID;
+                std::cout << "Introduce el DNI del Doctor: ";
+                std::cin >> doctorID;
+                std::cout << "Introduce la Fecha (DD:MM:YYYY): ";
+                std::cin >> fecha;
+                std::cout << "Introduce la Hora (HH:MM): ";
+                std::cin >> hora;
+
+                Cita nuevaCita;
+                nuevaCita.programarcita(pacienteID, doctorID, fecha, hora);
+            }
+            else if (citaOpcion == 2) {
+                Cita::mostrarcitas();
+            }
+            else {
+                std::cout << "Opción inválida.\n";
+            }
             break;
+        }
         case 4:
             std::cout << "Cerrando sesión...\n";
             return; 

@@ -5,7 +5,6 @@
 #include <fstream>
 #include <string>
 #include <iostream>
-using namespace std;
 
 // Clase Doctor
 class Doctor : public Person {
@@ -15,20 +14,20 @@ public:
     string disponibilidad;    
 
     void añadirDoctor() {
-        cout << "Introduce el ID del doctor: ";
-        cin >> doctorID;
+        std::cout << "Introduce el DNI del doctor: ";
+        std::cin >> doctorID;
         getPersonData();
-        cout << "Especialización: ";
-        cin.ignore();
-        getline(cin, especialidad);
-        cout << "Disponibilidad (Ej: Mañana/Tarde/Noche): ";
-        getline(cin, disponibilidad);
+        std::cout << "Especializacion: ";
+        std::cin.ignore();
+        getline(std::cin, especialidad);
+        std::cout << "Disponibilidad (Ej: Mañana/Tarde/Noche): ";
+        getline(std::cin, disponibilidad);
 
         ofstream file("doctors.txt", ios::app);
         file << doctorID << ";" << nombre << ";" << ntelf << ";"
             << especialidad << ";" << disponibilidad << "\n";
         file.close();
-        cout << "Doctor registrado con éxito.\n";
+        std::cout << "Doctor registrado con éxito.\n";
     }
 
     static void mostrarDoctor() {
@@ -36,10 +35,10 @@ public:
         string line;
         cout << "\n--- Lista de Doctores ---\n";
         while (getline(file, line)) {
-            cout << line << endl;
+            std::cout << line << endl;
         }
         file.close();
     }
-};
-
+}
+;
 #endif

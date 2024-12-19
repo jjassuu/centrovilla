@@ -40,6 +40,7 @@ public:
         }
         file.close();
     }
-};
+}
 
+;
 #endif
