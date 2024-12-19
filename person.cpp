@@ -3,7 +3,7 @@
 void Person::getPersonData() {
     cout << "Introduce la edad: ";
     cin >> edad;
-    cin.ignore(); 
+    cin.ignore();
     cout << "Introduce el nombre: ";
     getline(cin, nombre);
     cout << "Número de teléfono: ";

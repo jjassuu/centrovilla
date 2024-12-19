@@ -12,7 +12,7 @@ protected:
     string nombre, ntelf, direccion, email;
 
 public:
-    void getPersonData();    
+    void getPersonData();
     void showPersonData() const;
 };
 

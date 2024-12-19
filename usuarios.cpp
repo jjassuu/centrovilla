@@ -31,6 +31,7 @@ bool login(const std::unordered_map<std::string, std::string>& users) {
     std::cin >> username;
     std::cout << "Contrasena: ";
     std::cin >> password;
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Limpia el búfer
 
     if (users.find(username) != users.end() && users.at(username) == password) {
         std::cout << "Inicio de sesion exitoso. Bienvenido, " << username << "!\n";
@@ -41,6 +42,7 @@ bool login(const std::unordered_map<std::string, std::string>& users) {
         return false;
     }
 }
+
 
 // Función para registrar un nuevo usuario
 void registrar(std::unordered_map<std::string, std::string>& users) {

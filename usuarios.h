@@ -3,6 +3,8 @@
 
 #include <unordered_map>
 #include <string>
+#include <iostream>
+#include <fstream>
 
 // Declaración de funciones
 void cargarusuario(std::unordered_map<std::string, std::string>& users);
