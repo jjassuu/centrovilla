@@ -78,7 +78,7 @@ void mainMenu() {
 
               
                 Paciente paciente;
-                paciente.agregarDolencia(fecha, descripcion, medico);
+                paciente.agregarDolencia(dni, fecha, descripcion, medico);
             }
             else if (opcionpaciente == 5) {
                 // Mostrar historial de dolencias

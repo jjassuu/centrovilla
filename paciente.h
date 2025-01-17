@@ -39,7 +39,7 @@ public:
     static void eliminarPaciente(const std::string& dni);
 
     // Métodos para el historial de dolencias
-    void agregarDolencia(const std::string& fecha, const std::string& descripcion, const std::string& medico);
+    void agregarDolencia(const std::string& dni, const std::string& fecha, const std::string& descripcion, const std::string& medico);
     void mostrarHistorialDolencias( const std::string& dni) ;
 };
 

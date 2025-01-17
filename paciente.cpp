@@ -9,7 +9,7 @@ Paciente::Paciente(const std::string& dni, const std::string& nombre, int edad,
     email(email), diacita(fechaCita) {}
 
 // Agregar una dolencia al historial
-void Paciente::agregarDolencia(const std::string& fecha, const std::string& descripcion, const std::string& medico) {
+void Paciente::agregarDolencia(const std::string& dni, const std::string& fecha, const std::string& descripcion, const std::string& medico) {
     std::ofstream archivo("historial_dolencias.csv", std::ios::app);
     if (archivo.is_open()) {
         archivo << dni << "," << fecha << "," << descripcion << "," << medico << "\n";
