@@ -39,6 +39,8 @@ public:
     static void eliminarPaciente(const std::string& dni);
     static bool validarDNI(const std::string& dni);
     static bool existePaciente(const std::string& dni); // Verifica si el DNI ya está registrado
+    void editarPaciente(const std::string& dni);
+
 
     // Métodos para el historial de dolencias
     void agregarDolencia(const std::string& dni, const std::string& fecha, const std::string& descripcion, const std::string& medico);

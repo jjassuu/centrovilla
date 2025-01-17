@@ -45,7 +45,8 @@ void mainMenu() {
             std::cout << "3. Buscar paciente por DNI\n";
             std::cout << "4. Agregar Dolencia\n";
             std::cout << "5. Mostrar Historial de Dolencias\n";
-            std::cout << "6. Eliminar paciente\n";
+            std::cout << "6. Editar paciente\n";
+            std::cout << "7. Eliminar paciente\n";
             std::cout << "Elige una opcion\n";
             std::cin >> opcionpaciente;
             std::cin.ignore();
@@ -90,6 +91,14 @@ void mainMenu() {
                 paciente.mostrarHistorialDolencias(dni);
             }
             else if (opcionpaciente == 6) {
+                std::string dni;
+                std::cout << "Introduce el DNI del paciente a editar: ";
+                std::cin >> dni;
+                std::cin.ignore();
+                Paciente paciente;
+                paciente.editarPaciente(dni);
+            }
+            else if (opcionpaciente == 7) {
                 std::string dni;
                 std::cout << "Introduce el DNI del paciente a eliminar: ";
                 std::cin >> dni;

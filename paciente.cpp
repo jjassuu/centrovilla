@@ -270,3 +270,155 @@ void Paciente::eliminarPaciente(const std::string& dni) {
             std::cerr << "Error al abrir los archivos para eliminar al paciente.\n";
         }
 }
+
+void Paciente::editarPaciente(const std::string& dni) {
+    std::ifstream archivo("pacientes.csv");
+    std::ofstream temp("temp.csv");
+
+    if (archivo.is_open() && temp.is_open()) {
+        std::string linea;
+        bool encontrado = false;
+
+        while (std::getline(archivo, linea)) {
+            std::istringstream ss(linea);
+            std::string campoDNI, campoNombre, campoEdad, campoTelefono, campoDireccion, campoEmail, campoFechaCita;
+
+            // Leer cada campo de la línea
+            std::getline(ss, campoDNI, ',');
+            std::getline(ss, campoNombre, ',');
+            std::getline(ss, campoEdad, ',');
+            std::getline(ss, campoTelefono, ',');
+            std::getline(ss, campoDireccion, ',');
+            std::getline(ss, campoEmail, ',');
+            std::getline(ss, campoFechaCita, ',');
+
+            if (campoDNI == dni) {
+                encontrado = true;
+
+                // Mostrar los datos actuales
+                std::cout << "Datos actuales del paciente con DNI " << dni << ":\n";
+                std::cout << "Nombre: " << campoNombre << "\n";
+                std::cout << "Edad: " << campoEdad << "\n";
+                std::cout << "Teléfono: " << campoTelefono << "\n";
+                std::cout << "Dirección: " << campoDireccion << "\n";
+                std::cout << "Email: " << campoEmail << "\n";
+                std::cout << "Fecha de la cita: " << campoFechaCita << "\n";
+
+                // Pedir nuevos datos con validación
+                std::string nuevoNombre = campoNombre;
+                int nuevaEdad = 0;
+                try {
+                    nuevaEdad = std::stoi(campoEdad);
+                }
+                catch (...) {
+                    nuevaEdad = 0; // Si no es válido, asignar un valor predeterminado
+                }
+                std::string nuevoTelefono = campoTelefono;
+                std::string nuevaDireccion = campoDireccion;
+                std::string nuevoEmail = campoEmail;
+                std::string nuevaFechaCita = campoFechaCita;
+
+                std::cout << "\nIntroduce los nuevos datos (deja en blanco para mantener los actuales):\n";
+
+                // Nombre
+                std::cout << "Nombre [" << campoNombre << "]: ";
+                std::getline(std::cin, nuevoNombre);
+                if (nuevoNombre.empty()) {
+                    nuevoNombre = campoNombre;
+                }
+
+                // Edad
+                do {
+                    std::cout << "Edad [" << campoEdad << "]: ";
+                    std::string entradaEdad;
+                    std::getline(std::cin, entradaEdad);
+                    if (entradaEdad.empty()) {
+                        break; // Mantener la edad actual
+                    }
+                    try {
+                        nuevaEdad = std::stoi(entradaEdad);
+                        if (validarEdad(nuevaEdad)) {
+                            break;
+                        }
+                    }
+                    catch (...) {
+                        std::cerr << "Por favor, introduce una edad válida.\n";
+                    }
+                } while (true);
+
+                // Teléfono
+                do {
+                    std::cout << "Teléfono [" << campoTelefono << "]: ";
+                    std::getline(std::cin, nuevoTelefono);
+                    if (nuevoTelefono.empty()) {
+                        nuevoTelefono = campoTelefono;
+                        break;
+                    }
+                    if (validarTelefono(nuevoTelefono)) {
+                        break;
+                    }
+                } while (true);
+
+                // Dirección
+                std::cout << "Dirección [" << campoDireccion << "]: ";
+                std::getline(std::cin, nuevaDireccion);
+                if (nuevaDireccion.empty()) {
+                    nuevaDireccion = campoDireccion;
+                }
+
+                // Email
+                do {
+                    std::cout << "Email [" << campoEmail << "]: ";
+                    std::getline(std::cin, nuevoEmail);
+                    if (nuevoEmail.empty()) {
+                        nuevoEmail = campoEmail;
+                        break;
+                    }
+                    if (validarEmail(nuevoEmail)) {
+                        break;
+                    }
+                } while (true);
+
+                // Fecha de cita
+                std::cout << "Fecha de la cita [" << campoFechaCita << "]: ";
+                std::getline(std::cin, nuevaFechaCita);
+                if (nuevaFechaCita.empty()) {
+                    nuevaFechaCita = campoFechaCita;
+                }
+
+                // Escribir los nuevos datos en el archivo temporal
+                temp << campoDNI << "," << nuevoNombre << "," << nuevaEdad << ","
+                    << nuevoTelefono << "," << nuevaDireccion << ","
+                    << nuevoEmail << "," << nuevaFechaCita << "\n";
+                std::cout << "Datos del paciente actualizados correctamente.\n";
+            }
+            else {
+                // Copiar la línea tal como está si no es el paciente a editar
+                temp << linea << "\n";
+            }
+        }
+
+        archivo.close();
+        temp.close();
+
+        if (encontrado) {
+            // Sustituir el archivo original por el temporal
+            if (std::remove("pacientes.csv") != 0) {
+                std::cerr << "Error al eliminar el archivo original 'pacientes.csv'.\n";
+                return;
+            }
+
+            if (std::rename("temp.csv", "pacientes.csv") != 0) {
+                std::cerr << "Error al renombrar el archivo temporal.\n";
+                return;
+            }
+        }
+        else {
+            std::cout << "Paciente con DNI " << dni << " no encontrado.\n";
+            std::remove("temp.csv"); // Eliminar el archivo temporal si no se encontró el paciente
+        }
+    }
+    else {
+        std::cerr << "Error al abrir los archivos para editar al paciente.\n";
+    }
+}
