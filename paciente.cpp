@@ -1,6 +1,38 @@
 #include "paciente.h"
 #include <iomanip>
+#include <regex>
+bool Paciente::existePaciente(const std::string& dni) {
+    std::ifstream archivo("pacientes.csv");
+    if (archivo.is_open()) {
+        std::string linea;
+        while (std::getline(archivo, linea)) {
+            std::istringstream ss(linea);
+            std::string campoDNI;
+            std::getline(ss, campoDNI, ','); // Leer el DNI (primera columna)
 
+            if (campoDNI == dni) {
+                archivo.close();
+                return true; // DNI encontrado, existe duplicado
+            }
+        }
+        archivo.close();
+    }
+    else {
+        std::cerr << "Error al abrir el archivo de pacientes para verificar duplicados.\n";
+    }
+    return false; // DNI no encontrado
+}
+
+bool Paciente::validarDNI(const std::string& dni) {
+    // Expresión regular para 8 dígitos seguidos de 1 letra
+    std::regex formatoDNI("^\\d{8}[A-Za-z]$");
+
+    if (!std::regex_match(dni, formatoDNI)) {
+        std::cerr << "Error: El DNI debe tener 8 números seguidos de 1 letra.\n";
+        return false;
+    }
+    return true;
+}
 // Constructor de la clase Paciente
 Paciente::Paciente(const std::string& dni, const std::string& nombre, int edad,
     const std::string& telefono, const std::string& direccion,
@@ -56,9 +88,22 @@ void Paciente::mostrarHistorialDolencias (const std::string& dni)  {
 
 // Registrar un nuevo paciente.
 void Paciente::registrarPaciente() {
-    std::cout << "Introduce el DNI del paciente\n";
-    std::cin >> dni;
-    std::cin.ignore();
+    do{
+        std::cout << "Introduce el DNI del paciente\n";
+        std::cin >> dni;
+        std::cin.ignore();
+
+        if (!validarDNI(dni)) {
+            std::cout << "Por favor, introduce un DNI válido.\n";
+        }
+        else if(existePaciente(dni)){
+            std::cerr << "Error: El paciente con DNI " << dni << " ya está registrado.\n";
+            return;
+        }
+        else {
+            break;
+        }
+    } while (true);
 
     std::cout << "Introduce el nombre: ";
     std::getline(std::cin, nombre);
