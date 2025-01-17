@@ -137,29 +137,43 @@ void Paciente::registrarPaciente() {
     std::cout << "Introduce el nombre: ";
     std::getline(std::cin, nombre);
 
-    std::cout << "Introduce la edad: ";
-    std::cin >> edad;
-    if (!validarEdad(edad)) {
-        return; // Termina la función si la edad no es válida
-    }
+    do{
+        std::cout << "Introduce la edad: ";
+        std::cin >> edad;
+        if (!validarEdad(edad)) {
+            std::cerr << "Por favor, introduce una edad válida (mayor que 0).\n";
+        }
+        else {
+            break;
+        }
+    
+    } while (true);
     std::cin.ignore();
-
-    std::cout << "Introduce el teléfono: ";
-    std::getline(std::cin, telefono);
-    if (!validarTelefono(telefono)) {
-        return; 
-    }
+    
+    do{
+        std::cout << "Introduce el teléfono: ";
+        std::getline(std::cin, telefono);
+        if (!validarTelefono(telefono)) {
+            std::cerr << "Por favor, introduce un teléfono válido.\n";
+        }
+        else {
+            break;
+        }
+    } while (true);
 
     std::cout << "Introduce la dirección: ";
     std::getline(std::cin, direccion);
 
-
-    std::cout << "Introduce el correo electrónico: ";
-    std::getline(std::cin, email);
-    if (!validarEmail(email)) {
-        return; 
-    }
-
+    do{
+        std::cout << "Introduce el correo electrónico: ";
+        std::getline(std::cin, email);
+        if (!validarEmail(email)) {
+            std::cerr << "Por favor, introduce un email válido.\n";
+        }
+        else {
+            break;
+        }
+    } while (true);
     std::cout << "Introduce la fecha de la cita (YYYY-MM-DD): ";
     std::cin >> diacita;
 
