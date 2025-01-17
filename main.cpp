@@ -6,8 +6,19 @@
 #include <fstream>
 #include <unordered_map>
 #include "cita.h"
-
+#include <limits>
 // Función para mostrar el menú principal
+template <typename T>
+bool obtenerEntrada(T& entrada) {
+    std::cin >> entrada;
+    if (std::cin.fail()) {
+        std::cin.clear();
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        return false;
+    }
+    return true;
+}
+
 void mainMenu() {
     int option;
     do {
@@ -17,14 +28,21 @@ void mainMenu() {
         std::cout << "3. Gestionar Citas\n";
         std::cout << "4. Cerrar sesión\n";
         std::cout << "Elige una opción: ";
-        std::cin >> option;
+
+        if (!obtenerEntrada(option)) {
+            std::cout << "Entrada inválida. Por favor, introduce un número.\n";
+            continue; // Vuelve al menú principal
+        }
 
         switch (option) {
         case 1:
         {
             int doctorOption;
             cout << "\n1. Añadir Doctor\n2. Ver Todos los Doctores\nElige una opción: ";
-            cin >> doctorOption;
+            if (!obtenerEntrada(doctorOption)) {
+                std::cout << "Entrada inválida. Por favor, introduce un número.\n";
+                break; // Regresa al menú principal
+            }
             if (doctorOption == 1) {
                 Doctor newDoctor;
                 newDoctor.añadirDoctor();
@@ -48,8 +66,10 @@ void mainMenu() {
             std::cout << "6. Editar paciente\n";
             std::cout << "7. Eliminar paciente\n";
             std::cout << "Elige una opcion\n";
-            std::cin >> opcionpaciente;
-            std::cin.ignore();
+            if (!obtenerEntrada(opcionpaciente)) {
+                std::cout << "Entrada inválida. Por favor, introduce un número.\n";
+                break; // Regresa al menú principal
+            }
 
             if (opcionpaciente == 1) {
                 Paciente nuevoPaciente;
@@ -115,6 +135,12 @@ void mainMenu() {
             int citaOpcion;
             std::cout << "\n1. Agendar Cita\n2. Ver Todas las Citas\nElige una opción: ";
             std::cin >> citaOpcion;
+
+            if (!obtenerEntrada(citaOpcion)) {
+                std::cout << "Entrada inválida. Por favor, introduce un número.\n";
+                break; // Regresa al menú principal
+            }
+
             if (citaOpcion == 1) {
                 int pacienteID, doctorID;
                 std::string fecha, hora;
@@ -161,7 +187,13 @@ int main() {
         std::cout << "2. Registrar usuario\n";
         std::cout << "3. Salir\n";
         std::cout << "Elige una opción: ";
-        std::cin >> option;
+
+        if (!obtenerEntrada(option)) {
+            std::cout << "Entrada inválida. Por favor, introduce un número.\n";
+            continue; // Vuelve al menú principal
+        }
+
+   
 
         switch (option) {
         case 1:
