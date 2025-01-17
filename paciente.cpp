@@ -1,6 +1,35 @@
 #include "paciente.h"
 #include <iomanip>
 #include <regex>
+
+bool validarEdad(int edad) {
+    if (edad <= 0) {
+        std::cerr << "Error: La edad debe ser un número positivo.\n";
+        return false;
+    }
+    return true;
+}
+
+
+bool validarEmail(const std::string& email) {
+    std::regex patronEmail(R"(^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$)");
+    if (!std::regex_match(email, patronEmail)) {
+        std::cerr << "Error: El email no tiene un formato válido.\n";
+        return false;
+    }
+    return true;
+}
+
+
+bool validarTelefono(const std::string& telefono) {
+    std::regex patronTelefono(R"(^\d{9}$)");
+    if (!std::regex_match(telefono, patronTelefono)) {
+        std::cerr << "Error: El teléfono debe contener 9 dígitos.\n";
+        return false;
+    }
+    return true;
+}
+
 bool Paciente::existePaciente(const std::string& dni) {
     std::ifstream archivo("pacientes.csv");
     if (archivo.is_open()) {
@@ -110,16 +139,26 @@ void Paciente::registrarPaciente() {
 
     std::cout << "Introduce la edad: ";
     std::cin >> edad;
+    if (!validarEdad(edad)) {
+        return; // Termina la función si la edad no es válida
+    }
     std::cin.ignore();
 
     std::cout << "Introduce el teléfono: ";
     std::getline(std::cin, telefono);
+    if (!validarTelefono(telefono)) {
+        return; 
+    }
 
     std::cout << "Introduce la dirección: ";
     std::getline(std::cin, direccion);
 
+
     std::cout << "Introduce el correo electrónico: ";
     std::getline(std::cin, email);
+    if (!validarEmail(email)) {
+        return; 
+    }
 
     std::cout << "Introduce la fecha de la cita (YYYY-MM-DD): ";
     std::cin >> diacita;
