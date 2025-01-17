@@ -40,14 +40,38 @@ void mainMenu() {
         case 2:
         {
             int opcionpaciente;
-            std::cout << "\n1. Añadir Paciente\n2. Ver Todos los Pacientes\nElige una opción: ";
+            std::cout << "\n1. Añadir Paciente";
+            std::cout << "2. Ver Todos los Pacientes\n";
+            std::cout << "3. Buscar paciente por DNI\n";
+            std::cout << "4. Eliminar paciente\n";
+            std::cout << "Elige una opcion";
             std::cin >> opcionpaciente;
+            std::cin.ignore();
+
             if (opcionpaciente == 1) {
-                Paciente newPatient;
-                newPatient.añadirpaciente();
+                Paciente nuevoPaciente;
+                nuevoPaciente.registrarPaciente();
             }
             else if (opcionpaciente == 2) {
-                Paciente::mostarpacientes();
+                Paciente::listarPacientes();
+            }
+            else if (opcionpaciente == 3) {
+                std::string dni;
+                std::cout << "Introduce el DNI del paciente a buscar: ";
+                std::cin >> dni;
+                Paciente::buscarPaciente(dni);
+            }
+            else if (opcionpaciente == 4) {
+                std::string dni;
+                std::cout << "Introduce el DNI del paciente a eliminar: ";
+                std::cin >> dni;
+                try {
+                    int id = std::stoi(dni);
+                    Paciente::eliminarPaciente(id);
+                }
+                catch (const std::exception&) {
+                    std::cerr << "Error: El DNI debe ser un número válido.\n";
+                }
             }
             else {
                 std::cout << "Opción inválida.\n";

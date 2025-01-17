@@ -3,44 +3,36 @@
 
 #include "person.h"
 #include <fstream>
+#include <sstream>
+#include <vector>
 #include <string>
 #include <iostream>
+#include <random>
 using namespace std;
 
-// Clase Paciente
+
 class Paciente : public Person {
-public:
-    int pacienteID;
+private:
+    string dni;
+    string nombre;
+    int edad;
+    string telefono;
+    string direccion;
+    string email;
     string dolencia;
     string diacita;
 
-    void añadirpaciente() {
-        cout << "Introduce el DNI del paciente: ";
-        cin >> pacienteID;
-        getPersonData();
-        cout << "Introduce la dolencia del paciente: ";
-        cin.ignore();
-        getline(cin, dolencia);
-        cout << "Introduce la fecha de la cita (YYYY-MM-DD): ";
-        cin >> diacita;
+public:
+    Paciente(const std::string& dni = "", const std::string& nombre = "", int edad = 0,
+        const std::string& telefono = "", const std::string& direccion = "",
+        const std::string& email = "", const std::string& dolencia = "", const std::string& fechaCita = "");
 
-        ofstream file("patients.txt", ios::app);
-        file << pacienteID << ";" << nombre << ";" << ntelf << ";"
-            << dolencia << ";" << diacita << "\n";
-        file.close();
-        cout << "Paciente registrado con éxito.\n";
-    }
+    // Métodos
+    void registrarPaciente();
+    static void listarPacientes();
+    static void buscarPaciente(const std::string& dni);
+    void guardarEnArchivo() const;
+    static void eliminarPaciente(int id);
+};
 
-    static void mostarpacientes() {
-        ifstream file("patients.txt");
-        string line;
-        cout << "\n--- Lista de Pacientes ---\n";
-        while (getline(file, line)) {
-            cout << line << endl;
-        }
-        file.close();
-    }
-}
-
-;
 #endif
