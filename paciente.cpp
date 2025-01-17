@@ -4,9 +4,31 @@
 // Constructor de la clase Paciente
 Paciente::Paciente(const std::string& dni, const std::string& nombre, int edad,
     const std::string& telefono, const std::string& direccion,
-    const std::string& email, const std::string& dolencia, const std::string& fechaCita)
+    const std::string& email, const std::string& fechaCita)
     : dni(dni), nombre(nombre), edad(edad), telefono(telefono), direccion(direccion),
-    email(email), dolencia(dolencia), diacita(fechaCita) {}
+    email(email), diacita(fechaCita) {}
+
+// Agregar una dolencia al historial
+void Paciente::agregarDolencia(const std::string& fecha, const std::string& descripcion, const std::string& medico) {
+    Dolencia nuevaDolencia = { fecha, descripcion, medico };
+    historialDolencias.push_back(nuevaDolencia);
+    std::cout << "Dolencia registrada correctamente.\n";
+}
+
+// Mostrar el historial de dolencias
+void Paciente::mostrarHistorialDolencias() const {
+    if (historialDolencias.empty()) {
+        std::cout << "No hay historial de dolencias para este paciente.\n";
+        return;
+    }
+
+    std::cout << "Historial de Dolencias del Paciente:\n";
+    for (const auto& dolencia : historialDolencias) {
+        std::cout << "Fecha: " << dolencia.fecha
+            << ", Descripción: " << dolencia.descripcion
+            << ", Médico: " << dolencia.medico << "\n";
+    }
+}
 
 // Registrar un nuevo paciente.
 void Paciente::registrarPaciente() {
@@ -30,9 +52,6 @@ void Paciente::registrarPaciente() {
     std::cout << "Introduce el correo electrónico: ";
     std::getline(std::cin, email);
 
-    std::cout << "Introduce la dolencia: ";
-    std::getline(std::cin, dolencia);
-
     std::cout << "Introduce la fecha de la cita (YYYY-MM-DD): ";
     std::cin >> diacita;
 
@@ -44,9 +63,7 @@ void Paciente::registrarPaciente() {
 void Paciente::guardarEnArchivo() const {
     std::ofstream archivo("pacientes.csv", std::ios::app);
     if (archivo.is_open()) {
-        archivo<< dni << "," << nombre << "," << edad << "," << telefono
-            << "," << direccion << "," << email << "," << dolencia
-            << "," << diacita << "\n";
+        archivo<< dni << "," << nombre << "," << edad << "," << telefono << "," << direccion << "," << email << "," << "," << diacita << "\n";
         archivo.close();
     }
     else {
@@ -107,19 +124,31 @@ void Paciente::eliminarPaciente(int id) {
             std::string campo;
             std::getline(ss, campo, ','); // Leer el DNI
 
-            if (std::stoi(campo) != id) {
-                temp << linea << "\n";
+            try {
+                if (std::stoi(campo) != id) {
+                    temp << linea << "\n";
+                }
+            }
+            catch (const std::invalid_argument& e) {
+                std::cerr << "Error: ID no válido en el archivo.\n";
             }
         }
-
         archivo.close();
         temp.close();
+        
+        if (std::remove("pacientes.csv") != 0) {
+            std::cerr << "Error al eliminar el archivo original 'pacientes.csv'.\n";
+            return;
+        }
 
-        std::remove("pacientes.csv");
-        std::rename("temp.csv", "pacientes.csv");
+        if (std::rename("temp.csv", "pacientes.csv") != 0) {
+            std::cerr << "Error al renombrar el archivo temporal.\n";
+            return;
+        }
+        
         std::cout << "Paciente con ID " << id << " eliminado correctamente.\n";
-    }
+    } 
     else {
-        std::cerr << "Error al abrir los archivos para eliminar al paciente.\n";
-    }
+            std::cerr << "Error al abrir los archivos para eliminar al paciente.\n";
+        }
 }

@@ -10,7 +10,11 @@
 #include <random>
 using namespace std;
 
-
+struct Dolencia {
+    string fecha;
+    string descripcion;
+    string medico;
+};
 class Paciente : public Person {
 private:
     string dni;
@@ -19,13 +23,13 @@ private:
     string telefono;
     string direccion;
     string email;
-    string dolencia;
+    vector <Dolencia> historialDolencias;
     string diacita;
 
 public:
     Paciente(const std::string& dni = "", const std::string& nombre = "", int edad = 0,
         const std::string& telefono = "", const std::string& direccion = "",
-        const std::string& email = "", const std::string& dolencia = "", const std::string& fechaCita = "");
+        const std::string& email = "", const std::string& fechaCita = "");
 
     // Métodos
     void registrarPaciente();
@@ -33,6 +37,10 @@ public:
     static void buscarPaciente(const std::string& dni);
     void guardarEnArchivo() const;
     static void eliminarPaciente(int id);
+
+    // Métodos para el historial de dolencias
+    void agregarDolencia(const std::string& fecha, const std::string& descripcion, const std::string& medico);
+    void mostrarHistorialDolencias() const;
 };
 
 #endif

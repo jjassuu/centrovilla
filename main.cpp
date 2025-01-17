@@ -40,11 +40,13 @@ void mainMenu() {
         case 2:
         {
             int opcionpaciente;
-            std::cout << "\n1. Añadir Paciente";
+            std::cout << "\n1. Añadir Paciente\n";
             std::cout << "2. Ver Todos los Pacientes\n";
             std::cout << "3. Buscar paciente por DNI\n";
-            std::cout << "4. Eliminar paciente\n";
-            std::cout << "Elige una opcion";
+            std::cout << "4. Agregar Dolencia\n";
+            std::cout << "5. Mostrar Historial de Dolencias\n";
+            std::cout << "6. Eliminar paciente\n";
+            std::cout << "Elige una opcion\n";
             std::cin >> opcionpaciente;
             std::cin.ignore();
 
@@ -62,6 +64,28 @@ void mainMenu() {
                 Paciente::buscarPaciente(dni);
             }
             else if (opcionpaciente == 4) {
+                // Agreg dolencia a un paciente
+                std::string dni, fecha, descripcion, medico;
+                std::cout << "Introduce el DNI del paciente: ";
+                std::cin >> dni;
+                std::cin.ignore();
+                std::cout << "Introduce la fecha (YYYY-MM-DD): ";
+                std::getline(std::cin, fecha);
+                std::cout << "Introduce la descripción de la dolencia: ";
+                std::getline(std::cin, descripcion);
+                std::cout << "Introduce el nombre del médico: ";
+                std::getline(std::cin, medico);
+
+              
+                Paciente paciente;
+                paciente.agregarDolencia(fecha, descripcion, medico);
+            }
+            else if (opcionpaciente == 5) {
+                // Mostrar historial de dolencias
+                Paciente paciente;
+                paciente.mostrarHistorialDolencias();
+            }
+            else if (opcionpaciente == 6) {
                 std::string dni;
                 std::cout << "Introduce el DNI del paciente a eliminar: ";
                 std::cin >> dni;

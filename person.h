@@ -8,7 +8,7 @@ using namespace std;
 // Declaración de la clase Person
 class Person {
 protected:
-    int edad;
+    int edad=0;
     string nombre, ntelf, direccion, email;
 
 public:
