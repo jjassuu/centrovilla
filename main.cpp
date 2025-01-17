@@ -82,20 +82,19 @@ void mainMenu() {
             }
             else if (opcionpaciente == 5) {
                 // Mostrar historial de dolencias
+                std::string dni;
+                std::cout << "Introduce el DNI del paciente: ";
+                std::cin >> dni;
+           
                 Paciente paciente;
-                paciente.mostrarHistorialDolencias();
+                paciente.mostrarHistorialDolencias(dni);
             }
             else if (opcionpaciente == 6) {
                 std::string dni;
                 std::cout << "Introduce el DNI del paciente a eliminar: ";
                 std::cin >> dni;
-                try {
-                    int id = std::stoi(dni);
-                    Paciente::eliminarPaciente(id);
-                }
-                catch (const std::exception&) {
-                    std::cerr << "Error: El DNI debe ser un número válido.\n";
-                }
+                
+                Paciente::eliminarPaciente(dni);
             }
             else {
                 std::cout << "Opción inválida.\n";
