@@ -8,18 +8,7 @@
 #include <unordered_map>
 #include "cita.h"
 #include <limits>
-// Función para mostrar el menú principal
-template <typename T>
-bool obtenerEntrada(T& entrada) {
-    std::cin >> entrada;
-    if (std::cin.fail()) {
-        std::cin.clear();
-        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-        return false;
-    }
-    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-    return true;
-}
+
 
 void mainMenu() {
     int option;
@@ -40,7 +29,10 @@ void mainMenu() {
         case 1:
         {
             int doctorOption;
-            cout << "\n1. Añadir Doctor\n2. Ver Todos los Doctores\nElige una opción: ";
+            std::cout << "\n1. Añadir Doctor\n";
+            std::cout << "2. Ver Todos los Doctores\n";
+            std::cout << "3. Eliminar Doctor\n"; // Nueva opción para eliminar doctor
+            std::cout << "Elige una opción: ";
             if (!obtenerEntrada(doctorOption)) {
                 std::cout << "Entrada inválida. Por favor, introduce un número.\n";
                 break; // Regresa al menú principal
@@ -51,6 +43,12 @@ void mainMenu() {
             }
             else if (doctorOption == 2) {
                 Doctor::listarDoctores();
+            }
+            else if (doctorOption == 3) { // Lógica para eliminar doctor
+                std::string dni;
+                std::cout << "Introduce el DNI del doctor que deseas eliminar: ";
+                std::cin >> dni;
+                Doctor::eliminarDoctor(dni); // Llama a la función eliminarDoctor
             }
             else {
                 cout << "Opción inválida.\n";

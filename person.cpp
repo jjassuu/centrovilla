@@ -1,7 +1,7 @@
 #include "person.h"
 #include <regex>
 #include <iostream>
-
+#include "main.h"
 // Validar el formato del DNI
 bool Person::validarDNI(const std::string& dni) {
     std::regex formatoDNI("^\\d{8}[A-Za-z]$");
@@ -23,7 +23,7 @@ bool Person::validarEdad(int edad) {
 
 // Validar el formato del correo electrónico
 bool Person::validarEmail(const std::string& email) {
-    std::regex patronEmail(R"(^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$)");
+    std::regex patronEmail(R"(^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$)");
     if (!std::regex_match(email, patronEmail)) {
         std::cerr << "Error: El email no tiene un formato válido.\n";
         return false;
@@ -50,18 +50,22 @@ void Person::getPersonData() {
             std::cerr << "Por favor, introduce un DNI válido.\n";
         }
     } while (!validarDNI(dni));
-
-    std::cout << "Introduce el nombre: ";
-    std::getline(std::cin, nombre);
+    do {
+        std::cout << "Introduce el nombre: ";
+        std::getline(std::cin, nombre);
+        if (nombre.empty()) {
+            std::cerr << "Error: El nombre no puede estar vacío. Por favor, introduce un nombre válido.\n";
+        }
+    } while (nombre.empty());
 
     do {
         std::cout << "Introduce la edad: ";
-        std::cin >> edad;
-        if (!validarEdad(edad)) {
+        if (!obtenerEntrada(edad) || !validarEdad(edad)) {
             std::cerr << "Por favor, introduce una edad válida (mayor que 0).\n";
-
         }
-        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        else {
+            break;
+        }
     } while (!validarEdad(edad));
 
     do {

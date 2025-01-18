@@ -2,6 +2,8 @@
 #include "person.h"
 #include <iostream>
 #include <fstream>
+#include <sstream>
+
 
 void Doctor::registrarDoctor() {
     std::cout << "Iniciando registro de doctor...\n";
@@ -53,5 +55,43 @@ void Doctor::listarDoctores() {
     }
     else {
         std::cerr << "Error al abrir el archivo CSV de doctores.\n";
+    }
+}
+
+void Doctor::eliminarDoctor(const std::string& dni) {
+    std::ifstream archivo("doctor.csv");
+    std::ofstream temp("temp.csv");
+
+    if (!archivo.is_open() || !temp.is_open()) {
+        std::cerr << "Error al abrir los archivos para eliminar al doctor.\n";
+        return;
+    }
+
+    std::string linea;
+    bool encontrado = false;
+    while (std::getline(archivo, linea)) {
+        std::istringstream ss(linea);
+        std::string campoDNI;
+        std::getline(ss, campoDNI, ','); // Leer el DNI
+
+        if (campoDNI == dni) {
+            encontrado = true; // Doctor encontrado, no lo copiamos al archivo temporal
+        }
+        else {
+            temp << linea << "\n";
+        }
+    }
+
+    archivo.close();
+    temp.close();
+
+    if (encontrado) {
+        std::remove("doctor.csv");
+        std::rename("temp.csv", "doctor.csv");
+        std::cout << "Doctor con DNI " << dni << " eliminado correctamente.\n";
+    }
+    else {
+        std::cerr << "Doctor con DNI " << dni << " no encontrado.\n";
+        std::remove("temp.csv");
     }
 }

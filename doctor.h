@@ -23,6 +23,7 @@ public:
     void mostrarDoctor() const;
     void guardarDoctor() const;
     static void listarDoctores();
+    static void eliminarDoctor(const std::string& dni);
 };
 
 #endif
