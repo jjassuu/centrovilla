@@ -64,8 +64,6 @@ void Person::getPersonData() {
         std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
     } while (!validarEdad(edad));
 
-    std::cin.ignore(); // Limpiar el buffer
-
     do {
         std::cout << "Introduce el número de teléfono (9 dígitos): ";
         std::getline(std::cin, telefono);

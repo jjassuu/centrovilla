@@ -1,16 +1,21 @@
 #include "doctor.h"
+#include "person.h"
 #include <iostream>
 #include <fstream>
 
 void Doctor::registrarDoctor() {
+    std::cout << "Iniciando registro de doctor...\n";
     // Llamar a los datos heredados de Person
     getPersonData();
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
     std::cout << "Introduce la especialización médica (Médico de familia, Pediatra, Enfermero): ";
     std::getline(std::cin, especialidad);
+    std::cout << "Especialización registrada: " << especialidad << "\n";
 
     std::cout << "Introduce la disponibilidad (Mañana/Tarde): ";
     std::getline(std::cin, disponibilidad);
+    std::cout << "Disponibilidad registrada: " << disponibilidad << "\n";
 
     guardarDoctor();
     std::cout << "Doctor registrado con éxito.\n";

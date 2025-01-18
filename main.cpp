@@ -1,5 +1,6 @@
 ﻿#include "usuarios.h"
 #include "doctor.h"
+#include "person.h"
 #include "paciente.h"
 #include "main.h"
 #include <iostream>
