@@ -1,5 +1,6 @@
 ﻿#include "usuarios.h"
 #include "doctor.h"
+#include "admin.h"
 #include "person.h"
 #include "paciente.h"
 #include "main.h"
@@ -17,7 +18,8 @@ void mainMenu() {
         std::cout << "1. Gestionar Doctores\n";
         std::cout << "2. Gestionar Pacientes\n";
         std::cout << "3. Gestionar Citas\n";
-        std::cout << "4. Cerrar sesión\n";
+        std::cout << "4. Gestionar Administradores\n";
+        std::cout << "5. Cerrar sesión\n";
         std::cout << "Elige una opción: ";
 
         if (!obtenerEntrada(option)) {
@@ -170,15 +172,50 @@ void mainMenu() {
                 std::cout << "Opción inválida.\n";
             }
             break;
+        }case 4: {
+            int adminOpcion;
+            std::cout << "\n1. Añadir Administrador\n";
+            std::cout << "2. Ver Todos los Administradores\n";
+            std::cout << "3. Eliminar Administrador\n";
+            std::cout << "4. Editar Administrador\n";
+            std::cout << "Elige una opción: ";
+            if (!obtenerEntrada(adminOpcion)) {
+                std::cout << "Entrada inválida. Por favor, introduce un número.\n";
+                break; // Regresa al menú principal
+            }
+
+            if (adminOpcion == 1) {
+                Admin nuevoAdmin;
+                nuevoAdmin.registrarAdmin();
+            }
+            else if (adminOpcion == 2) {
+                Admin().listarAdmins();
+            }
+            else if (adminOpcion == 3) {
+                std::string dni;
+                std::cout << "Introduce el DNI del administrador que deseas eliminar: ";
+                std::cin >> dni;
+                Admin::eliminarAdmin(dni);
+            }
+            else if (adminOpcion == 4) {
+                std::string dni;
+                std::cout << "Introduce el DNI del administrador que deseas editar: ";
+                std::cin >> dni;
+                Admin::editarAdmin(dni);
+            }
+            else {
+                std::cout << "Opción inválida.\n";
+            }
+            break;
         }
-        case 4:
+        case 5:
             std::cout << "Cerrando sesión...\n";
             return; 
         default:
             std::cout << "Opción inválida. Inténtalo de nuevo.\n";
             break;
         }
-    } while (option != 4);
+    } while (option != 5);
 }
 
 int main() {
