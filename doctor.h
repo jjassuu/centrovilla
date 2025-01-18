@@ -2,43 +2,31 @@
 #define DOCTOR_H
 
 #include "person.h"
-#include <fstream>
 #include <string>
+#include <fstream>
 #include <iostream>
 
-// Clase Doctor
 class Doctor : public Person {
+private:
+    std::string especialidad;      
+    std::string disponibilidad;    
+
 public:
-    int doctorID;
-    string especialidad;  
-    string disponibilidad;    
+    
+    Doctor(const std::string& dni = "", const std::string& nombre = "", int edad = 0,
+        const std::string& telefono = "", const std::string& direccion = "",
+        const std::string& email = "", const std::string& especialidad = "",
+        const std::string& disponibilidad = "")
+       : Person(dni, nombre, edad, telefono, direccion, email),
+        especialidad(especialidad), disponibilidad(disponibilidad) {}
 
-    void añadirDoctor() {
-        std::cout << "Introduce el DNI del doctor: ";
-        std::cin >> doctorID;
-        getPersonData();
-        std::cout << "Especializacion: ";
-        std::cin.ignore();
-        getline(std::cin, especialidad);
-        std::cout << "Disponibilidad (Ej: Mañana/Tarde/Noche): ";
-        getline(std::cin, disponibilidad);
+    
+    void registrarDoctor();
+    void mostrarDoctor() const;
 
-        ofstream file("doctors.txt", ios::app);
-        file << doctorID << ";" << nombre << ";" << ntelf << ";"
-            << especialidad << ";" << disponibilidad << "\n";
-        file.close();
-        std::cout << "Doctor registrado con éxito.\n";
-    }
+    
+    void guardarDoctor() const;
+    static void listarDoctores();
+};
 
-    static void mostrarDoctor() {
-        ifstream file("doctors.txt");
-        string line;
-        cout << "\n--- Lista de Doctores ---\n";
-        while (getline(file, line)) {
-            std::cout << line << endl;
-        }
-        file.close();
-    }
-}
-;
 #endif

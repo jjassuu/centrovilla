@@ -16,6 +16,7 @@ bool obtenerEntrada(T& entrada) {
         std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
         return false;
     }
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
     return true;
 }
 
@@ -44,11 +45,11 @@ void mainMenu() {
                 break; // Regresa al menú principal
             }
             if (doctorOption == 1) {
-                Doctor newDoctor;
-                newDoctor.añadirDoctor();
+                Doctor nuevoDoctor;
+                nuevoDoctor.registrarDoctor();
             }
             else if (doctorOption == 2) {
-                Doctor::mostrarDoctor();
+                Doctor::listarDoctores();
             }
             else {
                 cout << "Opción inválida.\n";

@@ -244,7 +244,7 @@ void Paciente::eliminarPaciente(const std::string& dni) {
         while (std::getline(archivo, linea)) {
             std::istringstream ss(linea);
             std::string campo;
-            std::getline(ss, campo, ','); // Leer el DNI
+            std::getline(ss, campo, ','); 
 
            
             if (campo !=dni) {
@@ -295,7 +295,6 @@ void Paciente::editarPaciente(const std::string& dni) {
             if (campoDNI == dni) {
                 encontrado = true;
 
-                // Mostrar los datos actuales
                 std::cout << "Datos actuales del paciente con DNI " << dni << ":\n";
                 std::cout << "Nombre: " << campoNombre << "\n";
                 std::cout << "Edad: " << campoEdad << "\n";
@@ -304,7 +303,6 @@ void Paciente::editarPaciente(const std::string& dni) {
                 std::cout << "Email: " << campoEmail << "\n";
                 std::cout << "Fecha de la cita: " << campoFechaCita << "\n";
 
-                // Pedir nuevos datos con validación
                 std::string nuevoNombre = campoNombre;
                 int nuevaEdad = 0;
                 try {
@@ -320,14 +318,12 @@ void Paciente::editarPaciente(const std::string& dni) {
 
                 std::cout << "\nIntroduce los nuevos datos (deja en blanco para mantener los actuales):\n";
 
-                // Nombre
                 std::cout << "Nombre [" << campoNombre << "]: ";
                 std::getline(std::cin, nuevoNombre);
                 if (nuevoNombre.empty()) {
                     nuevoNombre = campoNombre;
                 }
 
-                // Edad
                 do {
                     std::cout << "Edad [" << campoEdad << "]: ";
                     std::string entradaEdad;
@@ -346,7 +342,6 @@ void Paciente::editarPaciente(const std::string& dni) {
                     }
                 } while (true);
 
-                // Teléfono
                 do {
                     std::cout << "Teléfono [" << campoTelefono << "]: ";
                     std::getline(std::cin, nuevoTelefono);
@@ -359,14 +354,13 @@ void Paciente::editarPaciente(const std::string& dni) {
                     }
                 } while (true);
 
-                // Dirección
+
                 std::cout << "Dirección [" << campoDireccion << "]: ";
                 std::getline(std::cin, nuevaDireccion);
                 if (nuevaDireccion.empty()) {
                     nuevaDireccion = campoDireccion;
                 }
 
-                // Email
                 do {
                     std::cout << "Email [" << campoEmail << "]: ";
                     std::getline(std::cin, nuevoEmail);
@@ -379,14 +373,12 @@ void Paciente::editarPaciente(const std::string& dni) {
                     }
                 } while (true);
 
-                // Fecha de cita
                 std::cout << "Fecha de la cita [" << campoFechaCita << "]: ";
                 std::getline(std::cin, nuevaFechaCita);
                 if (nuevaFechaCita.empty()) {
                     nuevaFechaCita = campoFechaCita;
                 }
 
-                // Escribir los nuevos datos en el archivo temporal
                 temp << campoDNI << "," << nuevoNombre << "," << nuevaEdad << ","
                     << nuevoTelefono << "," << nuevaDireccion << ","
                     << nuevoEmail << "," << nuevaFechaCita << "\n";
