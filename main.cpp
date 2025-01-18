@@ -31,7 +31,8 @@ void mainMenu() {
             int doctorOption;
             std::cout << "\n1. Añadir Doctor\n";
             std::cout << "2. Ver Todos los Doctores\n";
-            std::cout << "3. Eliminar Doctor\n"; // Nueva opción para eliminar doctor
+            std::cout << "3. Eliminar Doctor\n";
+            std::cout << "4. Editar Doctor\n";
             std::cout << "Elige una opción: ";
             if (!obtenerEntrada(doctorOption)) {
                 std::cout << "Entrada inválida. Por favor, introduce un número.\n";
@@ -44,11 +45,17 @@ void mainMenu() {
             else if (doctorOption == 2) {
                 Doctor::listarDoctores();
             }
-            else if (doctorOption == 3) { // Lógica para eliminar doctor
+            else if (doctorOption == 3) { 
                 std::string dni;
                 std::cout << "Introduce el DNI del doctor que deseas eliminar: ";
                 std::cin >> dni;
-                Doctor::eliminarDoctor(dni); // Llama a la función eliminarDoctor
+                Doctor::eliminarDoctor(dni); 
+            }
+            else if (doctorOption == 4) { 
+                std::string dni;
+                std::cout << "Introduce el DNI del doctor que deseas editar: ";
+                std::cin >> dni;
+                Doctor::editarDoctor(dni);
             }
             else {
                 cout << "Opción inválida.\n";

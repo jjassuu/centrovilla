@@ -24,6 +24,8 @@ public:
     void guardarDoctor() const;
     static void listarDoctores();
     static void eliminarDoctor(const std::string& dni);
+    static void editarDoctor(const std::string& dni);
+
 };
 
 #endif
