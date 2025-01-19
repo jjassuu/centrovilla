@@ -206,12 +206,35 @@ void mainMenu() {
             }
             else if (opcionpaciente == 6) {
                 std::string dni;
-                std::cout << "Introduce el DNI del paciente a editar: ";
-                std::cin >> dni;
-                std::cin.ignore();
+
+                // Validación del DNI antes de llamar a editarPaciente
+                while (true) {
+                    std::cout << "Introduce el DNI del paciente a editar: ";
+                    std::getline(std::cin >> std::ws, dni);
+
+                    if (dni.empty()) {
+                        std::cerr << "Error: El DNI no puede estar vacío. Por favor, inténtalo de nuevo.\n";
+                        continue;
+                    }
+
+                    if (!Person::validarDNI(dni)) {
+                        std::cerr << "Error: El DNI ingresado no tiene un formato válido. Debe contener 8 números seguidos de una letra.\n";
+                        continue;
+                    }
+
+                    if (!Paciente::existePaciente(dni)) {
+                        std::cerr << "Error: Paciente con DNI " << dni << " no encontrado.\n";
+                        continue;
+                    }
+
+                    break;
+                }
+
+                // Llamar al método editarPaciente
                 Paciente paciente;
                 paciente.editarPaciente(dni);
-            }
+                }
+
             else if (opcionpaciente == 7) {
                 std::string dni;
                 std::cout << "Introduce el DNI del paciente a eliminar: ";
