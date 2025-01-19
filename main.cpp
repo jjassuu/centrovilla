@@ -97,33 +97,27 @@ void mainMenu() {
 
                 do {
                     std::cout << "Introduce el DNI del paciente a buscar: ";
-                    std::getline(std::cin >> std::ws, dni); // Captura entrada eliminando espacios iniciales
+                    std::getline(std::cin >> std::ws, dni); 
 
-                    // Validación para DNI vacío
                     if (dni.empty()) {
                         std::cerr << "Error: El DNI no puede estar vacío. Por favor, inténtalo de nuevo.\n";
-                        continue; // Volver al inicio del bucle
+                        continue; 
                     }
 
-                    // Validación para formato de DNI
                     if (!Person::validarDNI(dni)) {
                         std::cerr << "Error: El DNI ingresado no tiene un formato válido. Debe contener 8 números seguidos de una letra.\n";
-                        continue; // Volver al inicio del bucle
+                        continue; 
                     }
 
-                    // Si las validaciones son exitosas, marcamos el DNI como válido
                     dniValido = true;
 
-                } while (!dniValido); // Repite mientras el DNI no sea válido
+                } while (!dniValido); 
 
-                // Llamar al método para buscar al paciente
                 Paciente::buscarPaciente(dni);
             }
             else if (opcionpaciente == 4) {
-                // Agregar dolencia a un paciente
                 std::string dni, fecha, descripcion, medico;
 
-                // Validación del DNI
                 do {
                     std::cout << "Introduce el DNI del paciente: ";
                     std::getline(std::cin >> std::ws, dni);
@@ -161,10 +155,9 @@ void mainMenu() {
                         continue;
                     }
 
-                    break; // Salimos del bucle si la fecha es válida
+                    break; 
                 } while (true);
 
-                // Validación de la descripción
                 do {
                     std::cout << "Introduce la descripción de la dolencia: ";
                     std::getline(std::cin >> std::ws, descripcion);
@@ -177,7 +170,6 @@ void mainMenu() {
                     break; // Salimos del bucle si la descripción es válida
                 } while (true);
 
-                // Validación del nombre del médico
                 do {
                     std::cout << "Introduce el nombre del médico: ";
                     std::getline(std::cin >> std::ws, medico);
@@ -187,10 +179,9 @@ void mainMenu() {
                         continue;
                     }
 
-                    break; // Salimos del bucle si el nombre del médico es válido
+                    break; 
                 } while (true);
 
-                // Agregar la dolencia al paciente
                 Paciente paciente;
                 paciente.agregarDolencia(dni, fecha, descripcion, medico);
             }
@@ -207,7 +198,6 @@ void mainMenu() {
             else if (opcionpaciente == 6) {
                 std::string dni;
 
-                // Validación del DNI antes de llamar a editarPaciente
                 while (true) {
                     std::cout << "Introduce el DNI del paciente a editar: ";
                     std::getline(std::cin >> std::ws, dni);
@@ -230,15 +220,34 @@ void mainMenu() {
                     break;
                 }
 
-                // Llamar al método editarPaciente
                 Paciente paciente;
                 paciente.editarPaciente(dni);
                 }
 
             else if (opcionpaciente == 7) {
                 std::string dni;
-                std::cout << "Introduce el DNI del paciente a eliminar: ";
-                std::cin >> dni;
+
+                while (true) {
+                    std::cout << "Introduce el DNI del paciente a eliminar: ";
+                    std::getline(std::cin >> std::ws, dni);
+
+                    if (dni.empty()) {
+                        std::cerr << "Error: El DNI no puede estar vacío. Por favor, inténtalo de nuevo.\n";
+                        continue;
+                    }
+
+                    if (!Person::validarDNI(dni)) {
+                        std::cerr << "Error: El DNI ingresado no tiene un formato válido. Debe contener 8 números seguidos de una letra.\n";
+                        continue;
+                    }
+
+                    if (!Paciente::existePaciente(dni)) {
+                        std::cerr << "Error: Paciente con DNI " << dni << " no encontrado.\n";
+                        continue;
+                    }
+
+                    break;
+                }
 
                 Paciente::eliminarPaciente(dni);
             }

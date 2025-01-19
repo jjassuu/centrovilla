@@ -186,43 +186,46 @@ void Paciente::buscarPaciente(const std::string& dni) {
     archivo.close();
 }
   
-
-
 void Paciente::eliminarPaciente(const std::string& dni) {
     std::ifstream archivo("pacientes.csv");
     std::ofstream temp("temp.csv");
 
-    if (archivo.is_open() && temp.is_open()) {
-        std::string linea;
-        while (std::getline(archivo, linea)) {
-            std::istringstream ss(linea);
-            std::string campo;
-            std::getline(ss, campo, ','); 
+    if (!archivo.is_open() || !temp.is_open()) {
+        std::cerr << "Error al abrir los archivos para eliminar al paciente.\n";
+        return;
+    }
 
-           
-            if (campo !=dni) {
-                temp << linea << "\n";
-            }
-        }
-        archivo.close();
-        temp.close();
-        
-        if (std::remove("pacientes.csv") != 0) {
-            std::cerr << "Error al eliminar el archivo original 'pacientes.csv'.\n";
-            return;
-        }
+    std::string linea;
+    bool encontrado = false;
 
-        if (std::rename("temp.csv", "pacientes.csv") != 0) {
-            std::cerr << "Error al renombrar el archivo temporal.\n";
-            return;
+    while (std::getline(archivo, linea)) {
+        std::istringstream ss(linea);
+        std::string campoDNI;
+
+        std::getline(ss, campoDNI, ',');
+
+        if (convertirAMayusculas(campoDNI) == convertirAMayusculas(dni)) {
+            encontrado = true; 
         }
-        
-        std::cout << "Paciente con ID " << dni << " eliminado correctamente.\n";
-    } 
+        else {
+            temp << linea << "\n";
+        }
+    }
+
+    archivo.close();
+    temp.close();
+
+    if (encontrado) {
+        std::remove("pacientes.csv");
+        std::rename("temp.csv", "pacientes.csv");
+        std::cout << "Paciente con DNI " << dni << " eliminado correctamente.\n";
+    }
     else {
-            std::cerr << "Error al abrir los archivos para eliminar al paciente.\n";
-        }
+        std::cout << "Paciente con DNI " << dni << " no encontrado.\n";
+        std::remove("temp.csv");
+    }
 }
+
 
 void Paciente::editarPaciente(const std::string& dni) {
     std::ifstream archivo("pacientes.csv");
