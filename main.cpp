@@ -146,55 +146,61 @@ void mainMenu() {
             std::cout << "3. Ver Citas por Día\n";
             std::cout << "4. Ver Citas por Turno\n";
             std::cout << "5. Generar Reporte por Día\n";
+            std::cout << "6. Eliminar Cita\n";
+            std::cout << "7. Modificar Cita\n"; 
             std::cout << "Elige una opción: ";
             if (!obtenerEntrada(citaOpcion)) {
                 std::cout << "Entrada inválida. Por favor, introduce un número.\n";
-                break; // Regresa al menú principal
+                break; 
             }
 
             GestionCitas gestionCitas;
 
             if (citaOpcion == 1) {
-                // Agendar una cita
-                std::string dniPaciente, dniDoctor, fecha, hora, especialidad;
-                std::cout << "Introduce el DNI del Paciente: ";
-                std::cin >> dniPaciente;
-                std::cout << "Introduce el DNI del Doctor: ";
-                std::cin >> dniDoctor;
-                std::cout << "Introduce la Fecha (YYYY-MM-DD): ";
-                std::cin >> fecha;
-                std::cout << "Introduce la Hora (HH:MM): ";
-                std::cin >> hora;
-                std::cin.ignore();
-                std::cout << "Introduce la Especialidad: ";
-                std::getline(std::cin, especialidad);
-
-                gestionCitas.agendarCita(dniPaciente, dniDoctor, fecha, hora, especialidad);
+                gestionCitas.agendarCita("", "", "", "", "");
             }
             else if (citaOpcion == 2) {
-                // Ver todas las citas
                 gestionCitas.mostrarTodasLasCitas();
             }
             else if (citaOpcion == 3) {
-                // Ver citas por día
                 std::string fecha;
                 std::cout << "Introduce la Fecha (YYYY-MM-DD): ";
                 std::cin >> fecha;
                 gestionCitas.listarCitasPorDia(fecha);
             }
             else if (citaOpcion == 4) {
-                // Ver citas por turno
                 std::string turno;
                 std::cout << "Introduce el turno (mañana/tarde): ";
                 std::cin >> turno;
                 gestionCitas.listarCitasPorTurno(turno);
             }
             else if (citaOpcion == 5) {
-                // Generar reporte por día
                 std::string fecha;
                 std::cout << "Introduce la Fecha (YYYY-MM-DD): ";
                 std::cin >> fecha;
                 gestionCitas.generarReportePorDia(fecha);
+            }
+            else if (citaOpcion == 6) {
+                std::string dniPaciente, fecha, hora;
+                std::cout << "Introduce el DNI del Paciente: ";
+                std::cin >> dniPaciente;
+                std::cout << "Introduce la Fecha (YYYY-MM-DD): ";
+                std::cin >> fecha;
+                std::cout << "Introduce la Hora (HH:MM): ";
+                std::cin >> hora;
+
+                gestionCitas.eliminarCita(dniPaciente, fecha, hora);
+            }
+            else if (citaOpcion == 7) {
+                std::string dniPaciente, fechaActual, horaActual;
+                std::cout << "Introduce el DNI del Paciente: ";
+                std::cin >> dniPaciente;
+                std::cout << "Introduce la Fecha actual de la cita (YYYY-MM-DD): ";
+                std::cin >> fechaActual;
+                std::cout << "Introduce la Hora actual de la cita (HH:MM): ";
+                std::cin >> horaActual;
+
+                gestionCitas.modificarCita(dniPaciente, fechaActual, horaActual);
             }
             else {
                 std::cout << "Opción inválida. Inténtalo de nuevo.\n";
@@ -290,3 +296,4 @@ int main() {
 
     return 0;
 }
+ 

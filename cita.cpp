@@ -1,5 +1,9 @@
 #include "cita.h"
 
+GestionCitas::GestionCitas() {
+    cargarCitasDesdeArchivo();
+}
+
 bool GestionCitas::verificarDisponibilidad(const std::string& dniDoctor, const std::string& fecha, const std::string& hora) {
     for (const auto& cita : citas) {
         if (cita.dniDoctor == dniDoctor && cita.fecha == fecha && cita.hora == hora) {
@@ -7,6 +11,118 @@ bool GestionCitas::verificarDisponibilidad(const std::string& dniDoctor, const s
         }
     }
     return true;
+}
+
+bool GestionCitas::validarFecha(const std::string& fecha) {
+    std::regex formatoFecha("^\\d{4}-\\d{2}-\\d{2}$");
+    return std::regex_match(fecha, formatoFecha);
+}
+
+bool GestionCitas::validarHora(const std::string& hora) {
+    std::regex formatoHora("^([01]\\d|2[0-3]):[0-5]\\d$");
+    return std::regex_match(hora, formatoHora);
+}
+
+bool GestionCitas::solicitarDNI(const std::string& tipo, std::string& dni) {
+    do {
+        std::cout << "Introduce el DNI del " << tipo << ": ";
+        std::cin >> dni;
+
+        if (!Person::validarDNI(dni)) {
+            std::cerr << "Error: Formato de DNI inválido. Debe tener 8 números y 1 letra (ejemplo: 12345678A).\n";
+            continue;
+        }
+
+        if ((tipo == "Paciente" && !Paciente::existePaciente(dni)) ||
+            (tipo == "Doctor" && !Doctor::existeDoctor(dni))) {
+            std::cerr << "Error: El " << tipo << " con DNI " << dni << " no está registrado.\n";
+            continue;
+        }
+
+        return true;
+    } while (true);
+}
+
+bool GestionCitas::solicitarFecha(std::string& fecha) {
+    do {
+        std::cout << "Introduce la Fecha (YYYY-MM-DD): ";
+        std::cin >> fecha;
+
+        if (!validarFecha(fecha)) {
+            std::cerr << "Error: Formato de fecha inválido. Ejemplo: 2025-01-19.\n";
+        }
+        else {
+            return true;
+        }
+    } while (true);
+}
+
+bool GestionCitas::solicitarHora(std::string& hora) {
+    do {
+        std::cout << "Introduce la Hora (HH:MM): ";
+        std::cin >> hora;
+
+        if (!validarHora(hora)) {
+            std::cerr << "Error: Formato de hora inválido. Ejemplo: 14:30.\n";
+        }
+        else {
+            return true;
+        }
+    } while (true);
+}
+
+bool GestionCitas::solicitarEspecialidad(std::string& especialidad) {
+    do {
+        std::cout << "Introduce la Especialidad (Medico de familia, Pediatra, Enfermero): ";
+        std::getline(std::cin >> std::ws, especialidad); // Leer eliminando espacios iniciales
+
+        if (especialidad != "Medico de familia" && especialidad != "Pediatra" && especialidad != "Enfermero") {
+            std::cerr << "Error: Especialidad inválida. Debe ser Médico de familia, Pediatra o Enfermero.\n";
+        }
+        else {
+            return true;
+        }
+    } while (true);
+}
+
+void GestionCitas::agendarCita(const std::string& dniPaciente, const std::string& dniDoctor, const std::string& fecha, const std::string& hora, const std::string& especialidad) {
+    std::string dniPacienteTemp = dniPaciente, dniDoctorTemp = dniDoctor;
+    std::string fechaTemp = fecha, horaTemp = hora, especialidadTemp = especialidad;
+
+    if (!solicitarDNI("Paciente", dniPacienteTemp)) {
+        std::cerr << "Error: No se puede proceder sin un DNI de paciente válido.\n";
+        return;
+    }
+
+    if (!solicitarDNI("Doctor", dniDoctorTemp)) {
+        std::cerr << "Error: No se puede proceder sin un DNI de doctor válido.\n";
+        return;
+    }
+
+    if (!solicitarFecha(fechaTemp)) {
+        std::cerr << "Error: No se puede proceder sin una fecha válida.\n";
+        return;
+    }
+
+    if (!solicitarHora(horaTemp)) {
+        std::cerr << "Error: No se puede proceder sin una hora válida.\n";
+        return;
+    }
+
+    if (!solicitarEspecialidad(especialidadTemp)) {
+        std::cerr << "Error: No se puede proceder sin una especialidad válida.\n";
+        return;
+    }
+
+    if (!verificarDisponibilidad(dniDoctorTemp, fechaTemp, horaTemp)) {
+        std::cerr << "Error: El doctor no está disponible en la fecha y hora indicadas.\n";
+        return;
+    }
+
+    Cita nuevaCita = { fechaTemp, horaTemp, dniPacienteTemp, dniDoctorTemp, especialidadTemp };
+    citas.push_back(nuevaCita);
+    guardarCitasEnArchivo();
+    std::cout << "Cita agendada exitosamente.\n";
 }
 
 void GestionCitas::cargarCitasDesdeArchivo() {
@@ -44,27 +160,6 @@ void GestionCitas::guardarCitasEnArchivo() const {
     archivo.close();
 }
 
-GestionCitas::GestionCitas() {
-    cargarCitasDesdeArchivo();
-}
-
-void GestionCitas::agendarCita(const std::string& dniPaciente, const std::string& dniDoctor, const std::string& fecha, const std::string& hora, const std::string& especialidad) {
-    if (!verificarDisponibilidad(dniDoctor, fecha, hora)) {
-        std::cerr << "El doctor no está disponible en esta fecha y hora.\n";
-        return;
-    }
-
-    if (especialidad == "Enfermero" && hora >= "12:00") {
-        std::cerr << "Los enfermeros solo pueden trabajar en el turno de mañana.\n";
-        return;
-    }
-
-    Cita nuevaCita = { fecha, hora, dniPaciente, dniDoctor, especialidad };
-    citas.push_back(nuevaCita);
-    guardarCitasEnArchivo();
-    std::cout << "Cita agendada exitosamente.\n";
-}
-
 void GestionCitas::listarCitasPorDia(const std::string& fecha) const {
     std::cout << "Citas para el día " << fecha << ":\n";
     for (const auto& cita : citas) {
@@ -87,7 +182,7 @@ void GestionCitas::generarReportePorDia(const std::string& fecha) const {
 
     std::cout << "Reporte de citas para el día " << fecha << ":\n";
     for (const auto& [especialidad, count] : especialidadesCount) {
-        std::cout << "Especialidad: " << especialidad << ", Cantidad de citas: " << count << "\n";
+        std::cout << "Especialidad: " << especialidad << ", Cantidad: " << count << "\n";
     }
 }
 
@@ -110,5 +205,62 @@ void GestionCitas::listarCitasPorTurno(const std::string& turno) const {
                 << ", Doctor: " << cita.dniDoctor
                 << ", Especialidad: " << cita.especialidad << "\n";
         }
+    }
+}
+
+void GestionCitas::modificarCita(const std::string& dniPaciente, const std::string& fechaActual, const std::string& horaActual) {
+    bool encontrada = false;
+
+    for (auto& cita : citas) {
+        if (cita.dniPaciente == dniPaciente && cita.fecha == fechaActual && cita.hora == horaActual) {
+            encontrada = true;
+
+            std::cout << "Cita encontrada:\n";
+            std::cout << "Fecha actual: " << cita.fecha << ", Hora actual: " << cita.hora << "\n";
+
+            std::string nuevaFecha, nuevaHora;
+
+            std::cout << "Introduce la nueva fecha (YYYY-MM-DD) o deja en blanco para mantener: ";
+            std::getline(std::cin >> std::ws, nuevaFecha);
+            if (!nuevaFecha.empty() && validarFecha(nuevaFecha)) {
+                cita.fecha = nuevaFecha;
+            }
+
+            std::cout << "Introduce la nueva hora (HH:MM) o deja en blanco para mantener: ";
+            std::getline(std::cin >> std::ws, nuevaHora);
+            if (!nuevaHora.empty() && validarHora(nuevaHora)) {
+                if (!verificarDisponibilidad(cita.dniDoctor, cita.fecha, nuevaHora)) {
+                    std::cerr << "Error: El doctor no está disponible en la nueva fecha y hora.\n";
+                    return;
+                }
+                cita.hora = nuevaHora;
+            }
+
+            guardarCitasEnArchivo(); 
+            std::cout << "Cita modificada exitosamente.\n";
+            return;
+        }
+    }
+
+    if (!encontrada) {
+        std::cerr << "Error: No se encontró ninguna cita con los datos proporcionados.\n";
+    }
+}
+
+void GestionCitas::eliminarCita(const std::string& dniPaciente, const std::string& fecha, const std::string& hora) {
+    bool encontrada = false;
+
+    for (auto it = citas.begin(); it != citas.end(); ++it) {
+        if (it->dniPaciente == dniPaciente && it->fecha == fecha && it->hora == hora) {
+            citas.erase(it);
+            encontrada = true;
+            guardarCitasEnArchivo(); // Actualizar el archivo después de eliminar
+            std::cout << "Cita eliminada exitosamente.\n";
+            return;
+        }
+    }
+
+    if (!encontrada) {
+        std::cerr << "Error: No se encontró ninguna cita con los datos proporcionados.\n";
     }
 }

@@ -100,6 +100,29 @@ void Doctor::eliminarDoctor(const std::string& dni) {
     }
 }
 
+bool Doctor::existeDoctor(const std::string& dni) {
+    std::ifstream archivo("doctor.csv");
+    if (archivo.is_open()) {
+        std::string linea;
+        while (std::getline(archivo, linea)) {
+            std::istringstream ss(linea);
+            std::string campoDNI;
+            std::getline(ss, campoDNI, ','); // Leer el DNI (primera columna)
+
+            if (campoDNI == dni) {
+                archivo.close();
+                return true; // DNI encontrado
+            }
+        }
+        archivo.close();
+    }
+    else {
+        std::cerr << "Error al abrir el archivo de doctores para verificar.\n";
+    }
+    return false; // DNI no encontrado
+}
+
+
 void Doctor::editarDoctor(const std::string& dni) {
     std::ifstream archivo("doctor.csv");
     std::ofstream temp("temp.csv");
