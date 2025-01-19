@@ -29,13 +29,13 @@ bool GestionCitas::solicitarDNI(const std::string& tipo, std::string& dni) {
         std::cin >> dni;
 
         if (!Person::validarDNI(dni)) {
-            std::cerr << "Error: Formato de DNI inválido. Debe tener 8 números y 1 letra (ejemplo: 12345678A).\n";
+            std::cerr << "Error: Formato de DNI invalido. Debe tener 8 numeros y 1 letra (ejemplo: 12345678A).\n";
             continue;
         }
 
         if ((tipo == "Paciente" && !Paciente::existePaciente(dni)) ||
             (tipo == "Doctor" && !Doctor::existeDoctor(dni))) {
-            std::cerr << "Error: El " << tipo << " con DNI " << dni << " no está registrado.\n";
+            std::cerr << "Error: El " << tipo << " con DNI " << dni << " no esta registrado.\n";
             continue;
         }
 
@@ -49,7 +49,7 @@ bool GestionCitas::solicitarFecha(std::string& fecha) {
         std::cin >> fecha;
 
         if (!validarFecha(fecha)) {
-            std::cerr << "Error: Formato de fecha inválido. Ejemplo: 2025-01-19.\n";
+            std::cerr << "Error: Formato de fecha invalido. Ejemplo: 2025-01-19.\n";
         }
         else {
             return true;
@@ -63,7 +63,7 @@ bool GestionCitas::solicitarHora(std::string& hora) {
         std::cin >> hora;
 
         if (!validarHora(hora)) {
-            std::cerr << "Error: Formato de hora inválido. Ejemplo: 14:30.\n";
+            std::cerr << "Error: Formato de hora invalido. Ejemplo: 14:30.\n";
         }
         else {
             return true;
@@ -77,7 +77,7 @@ bool GestionCitas::solicitarEspecialidad(std::string& especialidad) {
         std::getline(std::cin >> std::ws, especialidad); // Leer eliminando espacios iniciales
 
         if (especialidad != "Medico de familia" && especialidad != "Pediatra" && especialidad != "Enfermero") {
-            std::cerr << "Error: Especialidad inválida. Debe ser Médico de familia, Pediatra o Enfermero.\n";
+            std::cerr << "Error: Especialidad invalida. Debe ser Medico de familia, Pediatra o Enfermero.\n";
         }
         else {
             return true;
@@ -90,32 +90,32 @@ void GestionCitas::agendarCita(const std::string& dniPaciente, const std::string
     std::string fechaTemp = fecha, horaTemp = hora, especialidadTemp = especialidad;
 
     if (!solicitarDNI("Paciente", dniPacienteTemp)) {
-        std::cerr << "Error: No se puede proceder sin un DNI de paciente válido.\n";
+        std::cerr << "Error: No se puede proceder sin un DNI de paciente valido.\n";
         return;
     }
 
     if (!solicitarDNI("Doctor", dniDoctorTemp)) {
-        std::cerr << "Error: No se puede proceder sin un DNI de doctor válido.\n";
+        std::cerr << "Error: No se puede proceder sin un DNI de doctor valido.\n";
         return;
     }
 
     if (!solicitarFecha(fechaTemp)) {
-        std::cerr << "Error: No se puede proceder sin una fecha válida.\n";
+        std::cerr << "Error: No se puede proceder sin una fecha valida.\n";
         return;
     }
 
     if (!solicitarHora(horaTemp)) {
-        std::cerr << "Error: No se puede proceder sin una hora válida.\n";
+        std::cerr << "Error: No se puede proceder sin una hora valida.\n";
         return;
     }
 
     if (!solicitarEspecialidad(especialidadTemp)) {
-        std::cerr << "Error: No se puede proceder sin una especialidad válida.\n";
+        std::cerr << "Error: No se puede proceder sin una especialidad valida.\n";
         return;
     }
 
     if (!verificarDisponibilidad(dniDoctorTemp, fechaTemp, horaTemp)) {
-        std::cerr << "Error: El doctor no está disponible en la fecha y hora indicadas.\n";
+        std::cerr << "Error: El doctor no esta disponible en la fecha y hora indicadas.\n";
         return;
     }
 
@@ -161,7 +161,7 @@ void GestionCitas::guardarCitasEnArchivo() const {
 }
 
 void GestionCitas::listarCitasPorDia(const std::string& fecha) const {
-    std::cout << "Citas para el día " << fecha << ":\n";
+    std::cout << "Citas para el dia " << fecha << ":\n";
     for (const auto& cita : citas) {
         if (cita.fecha == fecha) {
             std::cout << "Hora: " << cita.hora
@@ -180,7 +180,7 @@ void GestionCitas::generarReportePorDia(const std::string& fecha) const {
         }
     }
 
-    std::cout << "Reporte de citas para el día " << fecha << ":\n";
+    std::cout << "Reporte de citas para el dia " << fecha << ":\n";
     for (const auto& [especialidad, count] : especialidadesCount) {
         std::cout << "Especialidad: " << especialidad << ", Cantidad: " << count << "\n";
     }
@@ -199,7 +199,7 @@ void GestionCitas::mostrarTodasLasCitas() const {
 void GestionCitas::listarCitasPorTurno(const std::string& turno) const {
     std::cout << "Citas para el turno de " << turno << ":\n";
     for (const auto& cita : citas) {
-        if ((turno == "mañana" && cita.hora < "12:00") || (turno == "tarde" && cita.hora >= "12:00")) {
+        if ((turno == "dia" && cita.hora < "12:00") || (turno == "tarde" && cita.hora >= "12:00")) {
             std::cout << "Fecha: " << cita.fecha << ", Hora: " << cita.hora
                 << ", Paciente: " << cita.dniPaciente
                 << ", Doctor: " << cita.dniDoctor
@@ -215,14 +215,14 @@ void GestionCitas::modificarCita(const std::string& dniPaciente, const std::stri
 
     do {
         if (!Paciente::validarDNI(dniPacienteTemp)) {
-            std::cerr << "Error: Formato de DNI inválido. Debe tener 8 números y 1 letra (ejemplo: 12345678A).\n";
+            std::cerr << "Error: Formato de DNI invalido. Debe tener 8 numeros y 1 letra (ejemplo: 12345678A).\n";
             std::cout << "Introduce el DNI del Paciente: ";
             std::cin >> dniPacienteTemp;
             continue;
         }
 
         if (!Paciente::existePaciente(dniPacienteTemp)) {
-            std::cerr << "Error: El paciente con DNI " << dniPacienteTemp << " no está registrado.\n";
+            std::cerr << "Error: El paciente con DNI " << dniPacienteTemp << " no esta registrado.\n";
             std::cout << "Introduce el DNI del Paciente: ";
             std::cin >> dniPacienteTemp;
             continue;
@@ -233,7 +233,7 @@ void GestionCitas::modificarCita(const std::string& dniPaciente, const std::stri
 
     do {
         if (!validarFecha(fechaActualTemp)) {
-            std::cerr << "Error: Formato de fecha inválido. Debe ser YYYY-MM-DD.\n";
+            std::cerr << "Error: Formato de fecha invalido. Debe ser YYYY-MM-DD.\n";
             std::cout << "Introduce la Fecha actual de la cita (YYYY-MM-DD): ";
             std::cin >> fechaActualTemp;
             continue;
@@ -243,7 +243,7 @@ void GestionCitas::modificarCita(const std::string& dniPaciente, const std::stri
 
     do {
         if (!validarHora(horaActualTemp)) {
-            std::cerr << "Error: Formato de hora inválido. Debe ser HH:MM.\n";
+            std::cerr << "Error: Formato de hora invalido. Debe ser HH:MM.\n";
             std::cout << "Introduce la Hora actual de la cita (HH:MM): ";
             std::cin >> horaActualTemp;
             continue;
@@ -269,7 +269,7 @@ void GestionCitas::modificarCita(const std::string& dniPaciente, const std::stri
                     cita.fecha = nuevaFecha;
                 }
                 else {
-                    std::cerr << "Error: Formato de fecha inválido. Manteniendo la fecha actual.\n";
+                    std::cerr << "Error: Formato de fecha invalido. Manteniendo la fecha actual.\n";
                 }
             }
 
@@ -282,11 +282,11 @@ void GestionCitas::modificarCita(const std::string& dniPaciente, const std::stri
                         cita.hora = nuevaHora;
                     }
                     else {
-                        std::cerr << "Error: El doctor no está disponible en la nueva hora. Manteniendo la hora actual.\n";
+                        std::cerr << "Error: El doctor no esta disponible en la nueva hora. Manteniendo la hora actual.\n";
                     }
                 }
                 else {
-                    std::cerr << "Error: Formato de hora inválido. Manteniendo la hora actual.\n";
+                    std::cerr << "Error: Formato de hora invalido. Manteniendo la hora actual.\n";
                 }
             }
 
@@ -297,7 +297,7 @@ void GestionCitas::modificarCita(const std::string& dniPaciente, const std::stri
     }
 
     if (!encontrada) {
-        std::cerr << "Error: No se encontró ninguna cita con los datos proporcionados.\n";
+        std::cerr << "Error: No se encontro ninguna cita con los datos proporcionados.\n";
     }
 }
 
@@ -309,13 +309,13 @@ void GestionCitas::eliminarCita(const std::string& dniPaciente, const std::strin
         if (it->dniPaciente == dniPaciente && it->fecha == fecha && it->hora == hora) {
             citas.erase(it);
             encontrada = true;
-            guardarCitasEnArchivo(); // Actualizar el archivo después de eliminar
+            guardarCitasEnArchivo(); // Actualizar el archivo despues de eliminar
             std::cout << "Cita eliminada exitosamente.\n";
             return;
         }
     }
 
     if (!encontrada) {
-        std::cerr << "Error: No se encontró ninguna cita con los datos proporcionados.\n";
+        std::cerr << "Error: No se encontro ninguna cita con los datos proporcionados.\n";
     }
 }

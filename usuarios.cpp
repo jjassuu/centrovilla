@@ -1,6 +1,6 @@
 #include "usuarios.h"
 
-// Función para cargar usuarios desde un archivo
+// Funcion para cargar usuarios desde un archivo
 void cargarusuario(std::unordered_map<std::string, std::string>& users) {
     std::ifstream file("users.txt");
     if (file.is_open()) {
@@ -12,7 +12,7 @@ void cargarusuario(std::unordered_map<std::string, std::string>& users) {
     }
 }
 
-// Función para guardar usuarios en un archivo
+// Funcion para guardar usuarios en un archivo
 void guardarusuario(const std::unordered_map<std::string, std::string>& users) {
     std::ofstream file("users.txt", std::ios::trunc);
     if (file.is_open()) {
@@ -23,7 +23,7 @@ void guardarusuario(const std::unordered_map<std::string, std::string>& users) {
     }
 }
 
-// Función para realizar el inicio de sesión
+// Funcion para realizar el inicio de sesion
 bool login(const std::unordered_map<std::string, std::string>& users) {
     std::string username, password;
     std::cout << "=== INICIO DE SESION ===\n";
@@ -31,7 +31,7 @@ bool login(const std::unordered_map<std::string, std::string>& users) {
     std::cin >> username;
     std::cout << "Contrasena: ";
     std::cin >> password;
-    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Limpia el búfer
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Limpia el bufer
 
     if (users.find(username) != users.end() && users.at(username) == password) {
         std::cout << "Inicio de sesion exitoso. Bienvenido, " << username << "!\n";
@@ -44,7 +44,7 @@ bool login(const std::unordered_map<std::string, std::string>& users) {
 }
 
 
-// Función para registrar un nuevo usuario
+// Funcion para registrar un nuevo usuario
 void registrar(std::unordered_map<std::string, std::string>& users) {
     std::string username, password;
     std::cout << "=== REGISTRAR NUEVO USUARIO ===\n";

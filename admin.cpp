@@ -11,7 +11,7 @@ void Admin::registrarAdmin() {
     if (archivo.is_open()) {
         archivo << dni << "," << nombre << "," << edad << "," << telefono << "," << direccion << "," << email << "," << rol << "\n";
         archivo.close();
-        std::cout << "Administrador registrado con éxito.\n";
+        std::cout << "Administrador registrado con exito.\n";
     }
     else {
         std::cerr << "Error al abrir el archivo para guardar el administrador.\n";
@@ -105,8 +105,8 @@ void Admin::editarAdmin(const std::string& dni) {
             std::cout << "Datos actuales del administrador con DNI " << dni << ":\n";
             std::cout << "Nombre: " << campoNombre << "\n";
             std::cout << "Edad: " << campoEdad << "\n";
-            std::cout << "Teléfono: " << campoTelefono << "\n";
-            std::cout << "Dirección: " << campoDireccion << "\n";
+            std::cout << "Telefono: " << campoTelefono << "\n";
+            std::cout << "Direccion: " << campoDireccion << "\n";
             std::cout << "Email: " << campoEmail << "\n";
             std::cout << "Rol: " << campoRol << "\n";
 
@@ -120,7 +120,7 @@ void Admin::editarAdmin(const std::string& dni) {
             std::cout << "\nIntroduce los nuevos datos (deja en blanco para mantener los actuales):\n";
 
             std::cout << "Nombre [" << campoNombre << "]: ";
-            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Limpia el búfer
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Limpia el bufer
             std::getline(std::cin, nuevoNombre);
             if (nuevoNombre.empty()) nuevoNombre = campoNombre;
 
@@ -131,24 +131,25 @@ void Admin::editarAdmin(const std::string& dni) {
                 try {
                     nuevaEdad = std::stoi(entradaEdad);
                     if (nuevaEdad <= 0) {
-                        throw std::invalid_argument("Edad no válida");
+                        throw std::invalid_argument("Edad no valida");
                     }
                 }
                 catch (...) {
-                    std::cerr << "Por favor, introduce una edad válida. Se mantiene la edad actual.\n";
+                    
                     nuevaEdad = std::stoi(campoEdad);
+                    std::cerr << "Por favor, introduce una edad valida. Se mantiene la edad actual.\n";
                 }
             }
             else {
                 nuevaEdad = std::stoi(campoEdad);
             }
 
-            std::cout << "Teléfono [" << campoTelefono << "]: ";
+            std::cout << "Telefono [" << campoTelefono << "]: ";
             std::string entradaTelefono;
             std::getline(std::cin, entradaTelefono);
             if (!entradaTelefono.empty()) nuevoTelefono = entradaTelefono;
 
-            std::cout << "Dirección [" << campoDireccion << "]: ";
+            std::cout << "Direccion [" << campoDireccion << "]: ";
             std::string entradaDireccion;
             std::getline(std::cin, entradaDireccion);
             if (!entradaDireccion.empty()) nuevaDireccion = entradaDireccion;

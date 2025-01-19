@@ -20,13 +20,13 @@ void mainMenu() {
         std::cout << "2. Gestionar Pacientes\n";
         std::cout << "3. Gestionar Citas\n";
         std::cout << "4. Gestionar Administradores\n";
-        std::cout << "5. Gestión de Backups\n";
-        std::cout << "6. Cerrar sesión\n";
-        std::cout << "Elige una opción: ";
+        std::cout << "5. Gestion de Backups\n";
+        std::cout << "6. Cerrar sesion\n";
+        std::cout << "Elige una opcion: ";
 
         if (!obtenerEntrada(option)) {
-            std::cout << "Entrada inválida. Por favor, introduce un número.\n";
-            continue; // Vuelve al menú principal
+            std::cout << "Entrada invalida. Por favor, introduce un numero.\n";
+            continue; // Vuelve al menu principal
         }
 
         switch (option) {
@@ -37,10 +37,10 @@ void mainMenu() {
             std::cout << "2. Ver Todos los Doctores\n";
             std::cout << "3. Eliminar Doctor\n";
             std::cout << "4. Editar Doctor\n";
-            std::cout << "Elige una opción: ";
+            std::cout << "Elige una opcion: ";
             if (!obtenerEntrada(doctorOption)) {
-                std::cout << "Entrada inválida. Por favor, introduce un número.\n";
-                break; // Regresa al menú principal
+                std::cout << "Entrada invalida. Por favor, introduce un numero.\n";
+                break; // Regresa al menu principal
             }
             if (doctorOption == 1) {
                 Doctor nuevoDoctor;
@@ -62,7 +62,7 @@ void mainMenu() {
                 Doctor::editarDoctor(dni);
             }
             else {
-                cout << "Opción inválida.\n";
+                cout << "Opcion invalida.\n";
             }
             break;
         }
@@ -79,8 +79,8 @@ void mainMenu() {
             std::cout << "8. Derivar Paciente\n";
             std::cout << "Elige una opcion\n";
             if (!obtenerEntrada(opcionpaciente)) {
-                std::cout << "Entrada inválida. Por favor, introduce un número.\n";
-                break; // Regresa al menú principal
+                std::cout << "Entrada invalida. Por favor, introduce un numero.\n";
+                break; // Regresa al menu principal
             }
 
             if (opcionpaciente == 1) {
@@ -100,12 +100,12 @@ void mainMenu() {
                     std::getline(std::cin >> std::ws, dni); 
 
                     if (dni.empty()) {
-                        std::cerr << "Error: El DNI no puede estar vacío. Por favor, inténtalo de nuevo.\n";
+                        std::cerr << "Error: El DNI no puede estar vacio. Por favor, intentalo de nuevo.\n";
                         continue; 
                     }
 
                     if (!Person::validarDNI(dni)) {
-                        std::cerr << "Error: El DNI ingresado no tiene un formato válido. Debe contener 8 números seguidos de una letra.\n";
+                        std::cerr << "Error: El DNI ingresado no tiene un formato valido. Debe contener 8 numeros seguidos de una letra.\n";
                         continue; 
                     }
 
@@ -123,35 +123,35 @@ void mainMenu() {
                     std::getline(std::cin >> std::ws, dni);
 
                     if (dni.empty()) {
-                        std::cerr << "Error: El DNI no puede estar vacío. Por favor, inténtalo de nuevo.\n";
+                        std::cerr << "Error: El DNI no puede estar vacio. Por favor, intentalo de nuevo.\n";
                         continue;
                     }
 
                     if (!Person::validarDNI(dni)) {
-                        std::cerr << "Error: El DNI ingresado no tiene un formato válido. Debe contener 8 números seguidos de una letra.\n";
+                        std::cerr << "Error: El DNI ingresado no tiene un formato valido. Debe contener 8 numeros seguidos de una letra.\n";
                         continue;
                     }
 
                     if (!Paciente::existePaciente(dni)) {
-                        std::cerr << "Error: El paciente con DNI " << dni << " no está registrado. Por favor, verifica los datos.\n";
+                        std::cerr << "Error: El paciente con DNI " << dni << " no esta registrado. Por favor, verifica los datos.\n";
                         continue;
                     }
 
-                    break; // Salimos del bucle si todo es válido
+                    break; // Salimos del bucle si todo es valido
                 } while (true);
 
-                // Validación de la fecha
+                // Validacion de la fecha
                 do {
                     std::cout << "Introduce la fecha (YYYY-MM-DD): ";
                     std::getline(std::cin >> std::ws, fecha);
 
                     if (fecha.empty()) {
-                        std::cerr << "Error: La fecha no puede estar vacía. Por favor, inténtalo de nuevo.\n";
+                        std::cerr << "Error: La fecha no puede estar vacia. Por favor, intentalo de nuevo.\n";
                         continue;
                     }
 
                     if (!GestionCitas::validarFecha(fecha)) {
-                        std::cerr << "Error: La fecha no tiene un formato válido. Ejemplo: 2025-01-19.\n";
+                        std::cerr << "Error: La fecha no tiene un formato valido. Ejemplo: 2025-01-19.\n";
                         continue;
                     }
 
@@ -159,23 +159,23 @@ void mainMenu() {
                 } while (true);
 
                 do {
-                    std::cout << "Introduce la descripción de la dolencia: ";
+                    std::cout << "Introduce la descripcion de la dolencia: ";
                     std::getline(std::cin >> std::ws, descripcion);
 
                     if (descripcion.empty()) {
-                        std::cerr << "Error: La descripción no puede estar vacía. Por favor, inténtalo de nuevo.\n";
+                        std::cerr << "Error: La descripcion no puede estar vacia. Por favor, intentalo de nuevo.\n";
                         continue;
                     }
 
-                    break; // Salimos del bucle si la descripción es válida
+                    break; // Salimos del bucle si la descripcion es valida
                 } while (true);
 
                 do {
-                    std::cout << "Introduce el nombre del médico: ";
+                    std::cout << "Introduce el nombre del medico: ";
                     std::getline(std::cin >> std::ws, medico);
 
                     if (medico.empty()) {
-                        std::cerr << "Error: El nombre del médico no puede estar vacío. Por favor, inténtalo de nuevo.\n";
+                        std::cerr << "Error: El nombre del medico no puede estar vacio. Por favor, intentalo de nuevo.\n";
                         continue;
                     }
 
@@ -203,12 +203,12 @@ void mainMenu() {
                     std::getline(std::cin >> std::ws, dni);
 
                     if (dni.empty()) {
-                        std::cerr << "Error: El DNI no puede estar vacío. Por favor, inténtalo de nuevo.\n";
+                        std::cerr << "Error: El DNI no puede estar vacio. Por favor, intentalo de nuevo.\n";
                         continue;
                     }
 
                     if (!Person::validarDNI(dni)) {
-                        std::cerr << "Error: El DNI ingresado no tiene un formato válido. Debe contener 8 números seguidos de una letra.\n";
+                        std::cerr << "Error: El DNI ingresado no tiene un formato valido. Debe contener 8 numeros seguidos de una letra.\n";
                         continue;
                     }
 
@@ -232,12 +232,12 @@ void mainMenu() {
                     std::getline(std::cin >> std::ws, dni);
 
                     if (dni.empty()) {
-                        std::cerr << "Error: El DNI no puede estar vacío. Por favor, inténtalo de nuevo.\n";
+                        std::cerr << "Error: El DNI no puede estar vacio. Por favor, intentalo de nuevo.\n";
                         continue;
                     }
 
                     if (!Person::validarDNI(dni)) {
-                        std::cerr << "Error: El DNI ingresado no tiene un formato válido. Debe contener 8 números seguidos de una letra.\n";
+                        std::cerr << "Error: El DNI ingresado no tiene un formato valido. Debe contener 8 numeros seguidos de una letra.\n";
                         continue;
                     }
 
@@ -258,27 +258,27 @@ void mainMenu() {
                 std::cin >> dni;
 
                 if (!Paciente::existePaciente(dni)) {
-                    std::cout << "Error: El paciente con DNI " << dni << " no está registrado. Derivación cancelada.\n";
+                    std::cout << "Error: El paciente con DNI " << dni << " no esta registrado. Derivacion cancelada.\n";
                     break;
                 }
 
                 std::cout << "\nCentros Asociados:\n";
                 std::cout << "1. Centro de Salud Mental\n";
-                std::cout << "2. Centro de Traumatología\n";
+                std::cout << "2. Centro de Traumatologia\n";
                 std::cout << "Elige un centro: ";
                 if (!obtenerEntrada(centroOpcion) || (centroOpcion != 1 && centroOpcion != 2)) {
-                    std::cout << "Opción inválida. Derivación cancelada.\n";
+                    std::cout << "Opcion invalida. Derivacion cancelada.\n";
                     break;
                 }
 
-                std::string centro = (centroOpcion == 1) ? "Salud Mental" : "Traumatología";
+                std::string centro = (centroOpcion == 1) ? "Salud Mental" : "Traumatologia";
 
                 Paciente paciente;
                 paciente.derivarPaciente(centro);
                 break;
             }
             else {
-                std::cout << "Opción inválida.\n";
+                std::cout << "Opcion invalida.\n";
             }
             break;
         }
@@ -286,14 +286,14 @@ void mainMenu() {
             int citaOpcion;
             std::cout << "\n1. Agendar Cita\n";
             std::cout << "2. Ver Todas las Citas\n";
-            std::cout << "3. Ver Citas por Día\n";
+            std::cout << "3. Ver Citas por Dia\n";
             std::cout << "4. Ver Citas por Turno\n";
-            std::cout << "5. Generar Reporte por Día\n";
+            std::cout << "5. Generar Reporte por Dia\n";
             std::cout << "6. Eliminar Cita\n";
             std::cout << "7. Modificar Cita\n"; 
-            std::cout << "Elige una opción: ";
+            std::cout << "Elige una opcion: ";
             if (!obtenerEntrada(citaOpcion)) {
-                std::cout << "Entrada inválida. Por favor, introduce un número.\n";
+                std::cout << "Entrada invalida. Por favor, introduce un numero.\n";
                 break; 
             }
 
@@ -346,7 +346,7 @@ void mainMenu() {
                 gestionCitas.modificarCita(dniPaciente, fechaActual, horaActual);
             }
             else {
-                std::cout << "Opción inválida. Inténtalo de nuevo.\n";
+                std::cout << "Opcion invalida. Intentalo de nuevo.\n";
             }
             break;
         }
@@ -356,10 +356,10 @@ void mainMenu() {
             std::cout << "2. Ver Todos los Administradores\n";
             std::cout << "3. Eliminar Administrador\n";
             std::cout << "4. Editar Administrador\n";
-            std::cout << "Elige una opción: ";
+            std::cout << "Elige una opcion: ";
             if (!obtenerEntrada(adminOpcion)) {
-                std::cout << "Entrada inválida. Por favor, introduce un número.\n";
-                break; // Regresa al menú principal
+                std::cout << "Entrada invalida. Por favor, introduce un numero.\n";
+                break; // Regresa al menu principal
             }
 
             if (adminOpcion == 1) {
@@ -382,7 +382,7 @@ void mainMenu() {
                 Admin::editarAdmin(dni);
             }
             else {
-                std::cout << "Opción inválida.\n";
+                std::cout << "Opcion invalida.\n";
             }
             break;
         }case 5: {
@@ -391,7 +391,7 @@ void mainMenu() {
             std::cout << "\n1. Crear Backups de Todos los Archivos\n";
             std::cout << "2. Listar Backups Disponibles\n";
             std::cout << "3. Restaurar un Archivo\n";
-            std::cout << "Elige una opción: ";
+            std::cout << "Elige una opcion: ";
 
             if (!obtenerEntrada(backupOption)) {
                 std::cout << "Entrada invalida, introduzca un numero";
@@ -431,15 +431,15 @@ void mainMenu() {
                 backupManager.restaurarBackup(archivoOriginal, archivoBackup);
             }
             else {
-                std::cout << "Opción inválida.\n";
+                std::cout << "Opcion invalida.\n";
             }
             break;
         }
         case 6:
-            std::cout << "Cerrando sesión...\n";
+            std::cout << "Cerrando sesion...\n";
             return; 
         default:
-            std::cout << "Opción inválida. Inténtalo de nuevo.\n";
+            std::cout << "Opcion invalida. Intentalo de nuevo.\n";
             break;
         }
     } while (option != 5);
@@ -452,18 +452,18 @@ int main() {
     cargarusuario(users);
 
     int option;
-    bool loggedIn = false; // Para controlar la sesión
+    bool loggedIn = false; // Para controlar la sesion
 
     do {
         std::cout << "\n=== Bienvenido al Centro de Salud Villa ===\n";
-        std::cout << "1. Iniciar sesión\n";
+        std::cout << "1. Iniciar sesion\n";
         std::cout << "2. Registrar usuario\n";
         std::cout << "3. Salir\n";
-        std::cout << "Elige una opción: ";
+        std::cout << "Elige una opcion: ";
 
         if (!obtenerEntrada(option)) {
-            std::cout << "Entrada inválida. Por favor, introduce un número.\n";
-            continue; // Vuelve al menú principal
+            std::cout << "Entrada invalida. Por favor, introduce un numero.\n";
+            continue; // Vuelve al menu principal
         }
 
    
@@ -472,7 +472,7 @@ int main() {
         case 1:
             if (login(users)) {
                 loggedIn = true;
-                mainMenu(); // Acceder al menú principal
+                mainMenu(); // Acceder al menu principal
                 loggedIn = false; // Una vez finalizado, volver a inicio
             }
             break;
@@ -483,7 +483,7 @@ int main() {
             std::cout << "Saliendo del sistema...\n";
             break;
         default:
-            std::cout << "Opción inválida. Inténtalo de nuevo.\n";
+            std::cout << "Opcion invalida. Intentalo de nuevo.\n";
             break;
         }
     } while (option != 3 && !loggedIn); // Detener el bucle correctamente

@@ -34,44 +34,44 @@ bool Paciente::existePaciente(const std::string& dni) {
 
 // Agregar una dolencia al historial
 void Paciente::agregarDolencia(const std::string& dni, const std::string& fecha, const std::string& descripcion, const std::string& medico) {
-    // Validar que el DNI no esté vacío
+    // Validar que el DNI no este vacio
     if (dni.empty()) {
-        std::cerr << "Error: El DNI no puede estar vacío.\n";
+        std::cerr << "Error: El DNI no puede estar vacio.\n";
         return;
     }
 
     // Validar el formato del DNI
     if (!Person::validarDNI(dni)) {
-        std::cerr << "Error: El DNI ingresado no tiene un formato válido. Debe contener 8 números seguidos de una letra.\n";
+        std::cerr << "Error: El DNI ingresado no tiene un formato valido. Debe contener 8 numeros seguidos de una letra.\n";
         return;
     }
 
     // Validar que el paciente exista
     if (!Paciente::existePaciente(dni)) {
-        std::cerr << "Error: El paciente con DNI " << dni << " no está registrado.\n";
+        std::cerr << "Error: El paciente con DNI " << dni << " no esta registrado.\n";
         return;
     }
 
-    // Validar que la fecha no esté vacía y tenga el formato correcto
+    // Validar que la fecha no este vacia y tenga el formato correcto
     if (fecha.empty()) {
-        std::cerr << "Error: La fecha no puede estar vacía.\n";
+        std::cerr << "Error: La fecha no puede estar vacia.\n";
         return;
     }
 
     if (!GestionCitas::validarFecha(fecha)) {
-        std::cerr << "Error: La fecha no tiene un formato válido. Ejemplo: 2025-01-19.\n";
+        std::cerr << "Error: La fecha no tiene un formato valido. Ejemplo: 2025-01-19.\n";
         return;
     }
 
-    // Validar que la descripción no esté vacía
+    // Validar que la descripcion no este vacia
     if (descripcion.empty()) {
-        std::cerr << "Error: La descripción no puede estar vacía.\n";
+        std::cerr << "Error: La descripcion no puede estar vacia.\n";
         return;
     }
 
-    // Validar que el nombre del médico no esté vacío
+    // Validar que el nombre del medico no este vacio
     if (medico.empty()) {
-        std::cerr << "Error: El nombre del médico no puede estar vacío.\n";
+        std::cerr << "Error: El nombre del medico no puede estar vacio.\n";
         return;
     }
     std::ofstream archivo("historial_dolencias.csv", std::ios::app);
@@ -121,11 +121,11 @@ void Paciente::mostrarHistorialDolencias (const std::string& dni)  {
 // Registrar un nuevo paciente.
 void Paciente::registrarPaciente() {
     try {
-        getPersonData(); // Solicita y valida todos los datos básicos del paciente.
+        getPersonData(); // Solicita y valida todos los datos basicos del paciente.
 
         // Guardar en archivo
         guardarEnArchivo();
-        std::cout << "\nPaciente registrado con éxito.\n";
+        std::cout << "\nPaciente registrado con exito.\n";
     }
     catch (const std::runtime_error& e) {
         std::cerr << "\nRegistro cancelado: " << e.what() << "\n";
@@ -256,8 +256,8 @@ void Paciente::editarPaciente(const std::string& dni) {
             std::cout << "Datos actuales del paciente con DNI " << dni << ":\n";
             std::cout << "Nombre: " << campoNombre << "\n";
             std::cout << "Edad: " << campoEdad << "\n";
-            std::cout << "Teléfono: " << campoTelefono << "\n";
-            std::cout << "Dirección: " << campoDireccion << "\n";
+            std::cout << "Telefono: " << campoTelefono << "\n";
+            std::cout << "Direccion: " << campoDireccion << "\n";
             std::cout << "Email: " << campoEmail << "\n";
 
             std::string nuevoNombre = campoNombre, nuevoTelefono = campoTelefono, nuevaDireccion = campoDireccion, nuevoEmail = campoEmail;
@@ -281,11 +281,11 @@ void Paciente::editarPaciente(const std::string& dni) {
                     }
                 }
                 catch (...) {
-                    std::cerr << "Por favor, introduce una edad válida.\n";
+                    std::cerr << "Por favor, introduce una edad valida.\n";
                 }
             } while (true);
 
-            std::cout << "Introduce el nuevo número de teléfono (deja en blanco para mantener \"" << campoTelefono << "\"): ";
+            std::cout << "Introduce el nuevo numero de telefono (deja en blanco para mantener \"" << campoTelefono << "\"): ";
             std::string entradaTelefono;
             std::getline(std::cin, entradaTelefono);
             if (!entradaTelefono.empty()) {
@@ -293,12 +293,12 @@ void Paciente::editarPaciente(const std::string& dni) {
                     nuevoTelefono = entradaTelefono;
                 }
                 else {
-                    std::cerr << "Error: El teléfono debe contener exactamente 9 dígitos.\n";
-                    std::cerr << "Número de teléfono inválido. Se mantendrá el valor actual.\n";
+                    std::cerr << "Error: El telefono debe contener exactamente 9 digitos.\n";
+                    std::cerr << "Numero de telefono invalido. Se mantendra el valor actual.\n";
                 }
             }
 
-            std::cout << "Introduce la nueva dirección (deja en blanco para mantener \"" << campoDireccion << "\"): ";
+            std::cout << "Introduce la nueva direccion (deja en blanco para mantener \"" << campoDireccion << "\"): ";
             std::string entradaDireccion;
             std::getline(std::cin, entradaDireccion);
             if (!entradaDireccion.empty()) nuevaDireccion = entradaDireccion;
@@ -311,8 +311,8 @@ void Paciente::editarPaciente(const std::string& dni) {
                     nuevoEmail = entradaEmail;
                 }
                 else {
-                    std::cerr << "Error: El email no tiene un formato válido.\n";
-                    std::cerr << "Email inválido. Se mantendrá el valor actual.\n";
+                    std::cerr << "Error: El email no tiene un formato valido.\n";
+                    std::cerr << "Email invalido. Se mantendra el valor actual.\n";
                 }
             }
  
