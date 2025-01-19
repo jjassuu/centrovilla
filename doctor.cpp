@@ -1,26 +1,98 @@
 #include "doctor.h"
 #include "person.h"
 #include <iostream>
+#include "main.h"
 #include <fstream>
 #include <sstream>
 
 
 void Doctor::registrarDoctor() {
     std::cout << "Iniciando registro de doctor...\n";
-    // Llamar a los datos heredados de Person
-    getPersonData();
-    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    do {
+        std::cout << "Introduce el DNI (8 números seguidos de una letra): ";
+        std::getline(std::cin, dni);
+        dni = convertirAMayusculas(dni); // Convierte el DNI a mayúsculas para consistencia
 
-    std::cout << "Introduce la especialización médica (Médico de familia, Pediatra, Enfermero): ";
-    std::getline(std::cin, especialidad);
-    std::cout << "Especialización registrada: " << especialidad << "\n";
+        if (!validarDNI(dni)) {
+            std::cerr << "Error: Por favor, introduce un DNI válido.\n";
+        }
+        else if (existeDoctor(dni)) { // Aquí se usa Doctor::existeDoctor
+            std::cerr << "Error: El doctor con DNI " << dni << " ya está registrado.\n";
+        }
+        else {
+            break; // DNI válido y no registrado
+        }
+    } while (true);
 
-    std::cout << "Introduce la disponibilidad (Mañana/Tarde): ";
-    std::getline(std::cin, disponibilidad);
-    std::cout << "Disponibilidad registrada: " << disponibilidad << "\n";
+    do {
+        std::cout << "Introduce el nombre: ";
+        std::getline(std::cin, nombre);
+        if (nombre.empty()) {
+            std::cerr << "Error: El nombre no puede estar vacío. Por favor, introduce un nombre válido.\n";
+        }
+    } while (nombre.empty());
+
+    do {
+        std::cout << "Introduce la edad: ";
+        if (!obtenerEntrada(edad) || !validarEdad(edad)) {
+            std::cerr << "Por favor, introduce una edad válida (mayor que 0).\n";
+        }
+        else {
+            break;
+        }
+    } while (!validarEdad(edad));
+
+    do {
+        std::cout << "Introduce el número de teléfono (9 dígitos): ";
+        std::getline(std::cin, telefono);
+        if (!validarTelefono(telefono)) {
+            std::cerr << "Por favor, introduce un número de teléfono válido.\n";
+        }
+    } while (!validarTelefono(telefono));
+
+    std::cout << "Introduce la dirección: ";
+    std::getline(std::cin, direccion);
+
+    do {
+        std::cout << "Introduce el email (formato válido): ";
+        std::getline(std::cin, email);
+        if (!validarEmail(email)) {
+            std::cerr << "Por favor, introduce un email válido.\n";
+        }
+    } while (!validarEmail(email));
+
+    do {
+        std::cout << "Introduce la especializacion medica (Medico de familia, Pediatra, Enfermero): ";
+        std::getline(std::cin, especialidad);
+
+        if (especialidad == "Medico de familia" || especialidad == "Pediatra" || especialidad == "Enfermero") {
+            std::cout << "Especializacion registrada: " << especialidad << "\n";
+            break;
+        }
+        else {
+            std::cerr << "Error: Especialización invalida. Debe ser Medico de familia, Pediatra, Enfermero.\n";
+        }
+    } while (true);
+
+    do {
+        std::cout << "Introduce la disponibilidad (Dia/Tarde): ";
+        std::getline(std::cin, disponibilidad);
+
+        if (disponibilidad == "Dia") {
+            std::cout << "Disponibilidad registrada: Dia (9:00 - 14:00)\n";
+            break;
+        }
+        else if (disponibilidad == "Tarde") {
+            std::cout << "Disponibilidad registrada: Tarde (15:00 - 19:00)\n";
+            break;
+        }
+        else {
+            std::cerr << "Error: Disponibilidad invalida. Debe ser Dia o Tarde.\n";
+        }
+    } while (true);
 
     guardarDoctor();
-    std::cout << "Doctor registrado con éxito.\n";
+    std::cout << "Doctor registrado con exito.\n";
 }
 
 void Doctor::mostrarDoctor() const {
@@ -165,67 +237,65 @@ void Doctor::editarDoctor(const std::string& dni) {
             std::cout << "\nIntroduce los nuevos datos (deja en blanco para mantener los actuales):\n";
 
             std::string nuevoNombre = campoNombre;
-            do {
-                std::cout << "Nombre [" << campoNombre << "]: ";
-                std::getline(std::cin, nuevoNombre);
-                if (!nuevoNombre.empty()) {
-                    break; // Si el nombre no está vacío, se acepta
-                }
-                else {
-                    std::cout << "El nombre no puede estar vacío. Inténtalo de nuevo.\n";
-                }
-            } while (true);
+            std::cout << "Introduce el nuevo nombre (deja en blanco para mantener \"" << campoNombre << "\"): ";
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Limpia el búfer
+            std::string entradaNombre;
+            std::getline(std::cin, entradaNombre);
+            if (!entradaNombre.empty()) nuevoNombre = entradaNombre;
 
-
+            std::string entradaEdad;
             int nuevaEdad = std::stoi(campoEdad);
-            do {
-                std::cout << "Edad [" << campoEdad << "]: ";
-                std::string entradaEdad;
-                std::getline(std::cin, entradaEdad);
-                if (entradaEdad.empty()) break;
-                try {
-                    nuevaEdad = std::stoi(entradaEdad);
-                    if (nuevaEdad > 0) break;
-                }
-                catch (...) {
-                    std::cerr << "Por favor, introduce una edad válida.\n";
-                }
-            } while (true);
+            std::cout << "Introduce la nueva edad (deja en blanco para mantener \"" << campoEdad << "\"): ";
+            std::getline(std::cin, entradaEdad);
+            if (!entradaEdad.empty()) nuevaEdad = std::stoi(entradaEdad);
 
             std::string nuevoTelefono = campoTelefono;
+            std::cout << "Introduce el nuevo teléfono (deja en blanco para mantener \"" << campoTelefono << "\"): ";
+            std::string entradaTelefono;
+            std::getline(std::cin, entradaTelefono);
+            if (!entradaTelefono.empty()) nuevoTelefono = entradaTelefono;
+
+            std::string nuevaDireccion = campoDireccion;
+            std::cout << "Introduce la nueva dirección (deja en blanco para mantener \"" << campoDireccion << "\"): ";
+            std::string entradaDireccion;
+            std::getline(std::cin, entradaDireccion);
+            if (!entradaDireccion.empty()) nuevaDireccion = entradaDireccion;
+
+            std::string nuevoEmail = campoEmail;
+            std::cout << "Introduce el nuevo email (deja en blanco para mantener \"" << campoEmail << "\"): ";
+            std::string entradaEmail;
+            std::getline(std::cin, entradaEmail);
+            if (!entradaEmail.empty()) nuevoEmail = entradaEmail;
+
+            std::string nuevaEspecialidad = campoEspecialidad;
             do {
-                std::cout << "Teléfono [" << campoTelefono << "]: ";
-                std::string entradaTelefono;
-                std::getline(std::cin, entradaTelefono);
-                if (entradaTelefono.empty()) break;
-                if (entradaTelefono.length() == 9) {
-                    nuevoTelefono = entradaTelefono;
+                std::cout << "Especialidad [" << campoEspecialidad << "] (Médico de familia, Pediatra, Enfermero): ";
+                std::getline(std::cin, nuevaEspecialidad);
+
+                if (nuevaEspecialidad.empty()) {
+                    nuevaEspecialidad = campoEspecialidad;
                     break;
                 }
-                else {
-                    std::cerr << "Por favor, introduce un número de teléfono válido (9 dígitos).\n";
+                if (nuevaEspecialidad == "Médico de familia" || nuevaEspecialidad == "Pediatra" || nuevaEspecialidad == "Enfermero") {
+                    break;
                 }
+                std::cerr << "Error: Especialidad inválida. Debe ser Médico de familia, Pediatra o Enfermero.\n";
             } while (true);
 
-            std::cout << "Dirección [" << campoDireccion << "]: ";
-            std::string nuevaDireccion;
-            std::getline(std::cin, nuevaDireccion);
-            if (nuevaDireccion.empty()) nuevaDireccion = campoDireccion;
+            std::string nuevaDisponibilidad = campoDisponibilidad;
+            do {
+                std::cout << "Disponibilidad [" << campoDisponibilidad << "] (Mañana/Tarde): ";
+                std::getline(std::cin, nuevaDisponibilidad);
 
-            std::cout << "Email [" << campoEmail << "]: ";
-            std::string nuevoEmail;
-            std::getline(std::cin, nuevoEmail);
-            if (nuevoEmail.empty()) nuevoEmail = campoEmail;
-
-            std::cout << "Especialidad [" << campoEspecialidad << "]: ";
-            std::string nuevaEspecialidad;
-            std::getline(std::cin, nuevaEspecialidad);
-            if (nuevaEspecialidad.empty()) nuevaEspecialidad = campoEspecialidad;
-
-            std::cout << "Disponibilidad [" << campoDisponibilidad << "]: ";
-            std::string nuevaDisponibilidad;
-            std::getline(std::cin, nuevaDisponibilidad);
-            if (nuevaDisponibilidad.empty()) nuevaDisponibilidad = campoDisponibilidad;
+                if (nuevaDisponibilidad.empty()) {
+                    nuevaDisponibilidad = campoDisponibilidad;
+                    break;
+                }
+                if (nuevaDisponibilidad == "Mañana" || nuevaDisponibilidad == "Tarde") {
+                    break;
+                }
+                std::cerr << "Error: Disponibilidad inválida. Debe ser Mañana o Tarde.\n";
+            } while (true);
 
             temp << campoDNI << "," << nuevoNombre << "," << nuevaEdad << ","
                 << nuevoTelefono << "," << nuevaDireccion << "," << nuevoEmail << ","
