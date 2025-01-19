@@ -1,37 +1,16 @@
 #include "paciente.h"
 #include <iomanip>
 #include <regex>
-
-
-bool validarEdad(int edad) {
-    if (edad <= 0) {
-        std::cerr << "Error: La edad debe ser un número positivo.\n";
-        return false;
-    }
-    return true;
-}
-
-
-bool validarEmail(const std::string& email) {
-    std::regex patronEmail(R"(^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$)");
-    if (!std::regex_match(email, patronEmail)) {
-        std::cerr << "Error: El email no tiene un formato válido.\n";
-        return false;
-    }
-    return true;
-}
-
-
-bool validarTelefono(const std::string& telefono) {
-    std::regex patronTelefono(R"(^\d{9}$)");
-    if (!std::regex_match(telefono, patronTelefono)) {
-        std::cerr << "Error: El teléfono debe contener 9 dígitos.\n";
-        return false;
-    }
-    return true;
-}
+Paciente::Paciente(const std::string& dni, const std::string& nombre, int edad,
+    const std::string& telefono, const std::string& direccion,
+    const std::string& email)
+    : Person(dni, nombre, edad, telefono, direccion, email){}
 
 bool Paciente::existePaciente(const std::string& dni) {
+    if (!Person::validarDNI(dni)) { 
+        return false;
+    }
+
     std::ifstream archivo("pacientes.csv");
     if (archivo.is_open()) {
         std::string linea;
@@ -40,7 +19,7 @@ bool Paciente::existePaciente(const std::string& dni) {
             std::string campoDNI;
             std::getline(ss, campoDNI, ','); // Leer el DNI (primera columna)
 
-            if (campoDNI == dni) {
+            if (convertirAMayusculas(campoDNI) == convertirAMayusculas(dni)) {
                 archivo.close();
                 return true; // DNI encontrado, existe duplicado
             }
@@ -53,25 +32,48 @@ bool Paciente::existePaciente(const std::string& dni) {
     return false; // DNI no encontrado
 }
 
-bool Paciente::validarDNI(const std::string& dni) {
-    // Expresión regular para 8 dígitos seguidos de 1 letra
-    std::regex formatoDNI("^\\d{8}[A-Za-z]$");
-
-    if (!std::regex_match(dni, formatoDNI)) {
-        std::cerr << "Error: El DNI debe tener 8 números seguidos de 1 letra.\n";
-        return false;
-    }
-    return true;
-}
-// Constructor de la clase Paciente
-Paciente::Paciente(const std::string& dni, const std::string& nombre, int edad,
-    const std::string& telefono, const std::string& direccion,
-    const std::string& email, const std::string& fechaCita)
-    : dni(dni), nombre(nombre), edad(edad), telefono(telefono), direccion(direccion),
-    email(email), diacita(fechaCita) {}
-
 // Agregar una dolencia al historial
 void Paciente::agregarDolencia(const std::string& dni, const std::string& fecha, const std::string& descripcion, const std::string& medico) {
+    // Validar que el DNI no esté vacío
+    if (dni.empty()) {
+        std::cerr << "Error: El DNI no puede estar vacío.\n";
+        return;
+    }
+
+    // Validar el formato del DNI
+    if (!Person::validarDNI(dni)) {
+        std::cerr << "Error: El DNI ingresado no tiene un formato válido. Debe contener 8 números seguidos de una letra.\n";
+        return;
+    }
+
+    // Validar que el paciente exista
+    if (!Paciente::existePaciente(dni)) {
+        std::cerr << "Error: El paciente con DNI " << dni << " no está registrado.\n";
+        return;
+    }
+
+    // Validar que la fecha no esté vacía y tenga el formato correcto
+    if (fecha.empty()) {
+        std::cerr << "Error: La fecha no puede estar vacía.\n";
+        return;
+    }
+
+    if (!GestionCitas::validarFecha(fecha)) {
+        std::cerr << "Error: La fecha no tiene un formato válido. Ejemplo: 2025-01-19.\n";
+        return;
+    }
+
+    // Validar que la descripción no esté vacía
+    if (descripcion.empty()) {
+        std::cerr << "Error: La descripción no puede estar vacía.\n";
+        return;
+    }
+
+    // Validar que el nombre del médico no esté vacío
+    if (medico.empty()) {
+        std::cerr << "Error: El nombre del médico no puede estar vacío.\n";
+        return;
+    }
     std::ofstream archivo("historial_dolencias.csv", std::ios::app);
     if (archivo.is_open()) {
         archivo << dni << "," << fecha << "," << descripcion << "," << medico << "\n";
@@ -102,8 +104,8 @@ void Paciente::mostrarHistorialDolencias (const std::string& dni)  {
             if (campoDNI == dni) {
                 encontrado = true;
                 std::cout << "- Fecha: " << fecha
-                    << ", Descripción: " << descripcion
-                    << ", Médico: " << medico << "\n";
+                    << ", Descripcion: " << descripcion
+                    << ", Medico: " << medico << "\n";
             }
         }
         if (!encontrado) {
@@ -118,75 +120,24 @@ void Paciente::mostrarHistorialDolencias (const std::string& dni)  {
 
 // Registrar un nuevo paciente.
 void Paciente::registrarPaciente() {
-    do{
-        std::cout << "Introduce el DNI del paciente\n";
-        std::cin >> dni;
-        std::cin.ignore();
+    try {
+        getPersonData(); // Solicita y valida todos los datos básicos del paciente.
 
-        if (!validarDNI(dni)) {
-            std::cout << "Por favor, introduce un DNI válido.\n";
-        }
-        else if(existePaciente(dni)){
-            std::cerr << "Error: El paciente con DNI " << dni << " ya está registrado.\n";
-            return;
-        }
-        else {
-            break;
-        }
-    } while (true);
-
-    std::cout << "Introduce el nombre: ";
-    std::getline(std::cin, nombre);
-
-    do{
-        std::cout << "Introduce la edad: ";
-        std::cin >> edad;
-        if (!validarEdad(edad)) {
-            std::cerr << "Por favor, introduce una edad válida (mayor que 0).\n";
-        }
-        else {
-            break;
-        }
-    
-    } while (true);
-    std::cin.ignore();
-    
-    do{
-        std::cout << "Introduce el teléfono: ";
-        std::getline(std::cin, telefono);
-        if (!validarTelefono(telefono)) {
-            std::cerr << "Por favor, introduce un teléfono válido.\n";
-        }
-        else {
-            break;
-        }
-    } while (true);
-
-    std::cout << "Introduce la dirección: ";
-    std::getline(std::cin, direccion);
-
-    do{
-        std::cout << "Introduce el correo electrónico: ";
-        std::getline(std::cin, email);
-        if (!validarEmail(email)) {
-            std::cerr << "Por favor, introduce un email válido.\n";
-        }
-        else {
-            break;
-        }
-    } while (true);
-    std::cout << "Introduce la fecha de la cita (YYYY-MM-DD): ";
-    std::cin >> diacita;
-
-    guardarEnArchivo();
-    std::cout << "\nPaciente registrado con éxito.\n";
+        // Guardar en archivo
+        guardarEnArchivo();
+        std::cout << "\nPaciente registrado con éxito.\n";
+    }
+    catch (const std::runtime_error& e) {
+        std::cerr << "\nRegistro cancelado: " << e.what() << "\n";
+    }
 }
+
 
 // Guardar paciente en el archivo.
 void Paciente::guardarEnArchivo() const {
     std::ofstream archivo("pacientes.csv", std::ios::app);
     if (archivo.is_open()) {
-        archivo<< dni << "," << nombre << "," << edad << "," << telefono << "," << direccion << "," << email << "," << "," << diacita << "\n";
+        archivo<< dni << "," << nombre << "," << edad << "," << telefono << "," << direccion << "," << email << "," << ","  << "\n";
         archivo.close();
     }
     else {
@@ -211,28 +162,30 @@ void Paciente::listarPacientes() {
 }
 
 void Paciente::buscarPaciente(const std::string& dni) {
+
     std::ifstream archivo("pacientes.csv");
-    if (archivo.is_open()) {
-        std::string linea;
-        while (std::getline(archivo, linea)) {
-            std::istringstream ss(linea);
-            std::string campo;
-            std::getline(ss, campo, ','); // Leer el DNI
+    if (!archivo.is_open()) {
+        std::cerr << "Error: No se pudo abrir el archivo 'pacientes.csv'. Verifica que el archivo exista y tenga los permisos necesarios.\n";
+        return;
+    }
 
-            if (campo == dni) {
-                std::cout << "Paciente encontrado: " << linea << "\n";
-                archivo.close();
-                return;
-            }
+    std::string linea;
+    while (std::getline(archivo, linea)) {
+        std::istringstream ss(linea);
+        std::string campoDNI;
+        std::getline(ss, campoDNI, ',');
+
+        if (convertirAMayusculas(campoDNI) == convertirAMayusculas(dni)) {
+            std::cout << "Paciente encontrado: " << linea << "\n";
+            archivo.close();
+            return;
         }
-        std::cout << "Paciente con DNI " << dni << " no encontrado.\n";
-        archivo.close();
     }
-    else {
-        std::cerr << "No se pudo abrir el archivo para buscar al paciente.\n";
-    }
-}
 
+    std::cout << "Paciente con DNI " << dni << " no encontrado.\n";
+    archivo.close();
+}
+  
 
 // Eliminar paciente
 void Paciente::eliminarPaciente(const std::string& dni) {
@@ -281,111 +234,36 @@ void Paciente::editarPaciente(const std::string& dni) {
 
         while (std::getline(archivo, linea)) {
             std::istringstream ss(linea);
-            std::string campoDNI, campoNombre, campoEdad, campoTelefono, campoDireccion, campoEmail, campoFechaCita;
+            std::string campoDNI, campoNombre, campoEdad, campoTelefono, campoDireccion, campoEmail;
 
-            // Leer cada campo de la línea
+            // Leer cada campo de la linea
             std::getline(ss, campoDNI, ',');
             std::getline(ss, campoNombre, ',');
             std::getline(ss, campoEdad, ',');
             std::getline(ss, campoTelefono, ',');
             std::getline(ss, campoDireccion, ',');
             std::getline(ss, campoEmail, ',');
-            std::getline(ss, campoFechaCita, ',');
-
+            
             if (campoDNI == dni) {
                 encontrado = true;
 
                 std::cout << "Datos actuales del paciente con DNI " << dni << ":\n";
                 std::cout << "Nombre: " << campoNombre << "\n";
                 std::cout << "Edad: " << campoEdad << "\n";
-                std::cout << "Teléfono: " << campoTelefono << "\n";
-                std::cout << "Dirección: " << campoDireccion << "\n";
+                std::cout << "Telefono: " << campoTelefono << "\n";
+                std::cout << "Direccion: " << campoDireccion << "\n";
                 std::cout << "Email: " << campoEmail << "\n";
-                std::cout << "Fecha de la cita: " << campoFechaCita << "\n";
 
-                std::string nuevoNombre = campoNombre;
-                int nuevaEdad = 0;
-                try {
-                    nuevaEdad = std::stoi(campoEdad);
-                }
-                catch (...) {
-                    nuevaEdad = 0; // Si no es válido, asignar un valor predeterminado
-                }
-                std::string nuevoTelefono = campoTelefono;
-                std::string nuevaDireccion = campoDireccion;
-                std::string nuevoEmail = campoEmail;
-                std::string nuevaFechaCita = campoFechaCita;
+                std::string nuevoNombre, nuevoTelefono, nuevaDireccion, nuevoEmail;
+                int nuevaEdad;
 
-                std::cout << "\nIntroduce los nuevos datos (deja en blanco para mantener los actuales):\n";
-
-                std::cout << "Nombre [" << campoNombre << "]: ";
-                std::getline(std::cin, nuevoNombre);
-                if (nuevoNombre.empty()) {
-                    nuevoNombre = campoNombre;
-                }
-
-                do {
-                    std::cout << "Edad [" << campoEdad << "]: ";
-                    std::string entradaEdad;
-                    std::getline(std::cin, entradaEdad);
-                    if (entradaEdad.empty()) {
-                        break; // Mantener la edad actual
-                    }
-                    try {
-                        nuevaEdad = std::stoi(entradaEdad);
-                        if (validarEdad(nuevaEdad)) {
-                            break;
-                        }
-                    }
-                    catch (...) {
-                        std::cerr << "Por favor, introduce una edad válida.\n";
-                    }
-                } while (true);
-
-                do {
-                    std::cout << "Teléfono [" << campoTelefono << "]: ";
-                    std::getline(std::cin, nuevoTelefono);
-                    if (nuevoTelefono.empty()) {
-                        nuevoTelefono = campoTelefono;
-                        break;
-                    }
-                    if (validarTelefono(nuevoTelefono)) {
-                        break;
-                    }
-                } while (true);
-
-
-                std::cout << "Dirección [" << campoDireccion << "]: ";
-                std::getline(std::cin, nuevaDireccion);
-                if (nuevaDireccion.empty()) {
-                    nuevaDireccion = campoDireccion;
-                }
-
-                do {
-                    std::cout << "Email [" << campoEmail << "]: ";
-                    std::getline(std::cin, nuevoEmail);
-                    if (nuevoEmail.empty()) {
-                        nuevoEmail = campoEmail;
-                        break;
-                    }
-                    if (validarEmail(nuevoEmail)) {
-                        break;
-                    }
-                } while (true);
-
-                std::cout << "Fecha de la cita [" << campoFechaCita << "]: ";
-                std::getline(std::cin, nuevaFechaCita);
-                if (nuevaFechaCita.empty()) {
-                    nuevaFechaCita = campoFechaCita;
-                }
-
-                temp << campoDNI << "," << nuevoNombre << "," << nuevaEdad << ","
-                    << nuevoTelefono << "," << nuevaDireccion << ","
-                    << nuevoEmail << "," << nuevaFechaCita << "\n";
+                temp << campoDNI << "," << nombre << "," << edad << ","
+                    << telefono << "," << direccion << ","
+                    << email << "," << "\n";
                 std::cout << "Datos del paciente actualizados correctamente.\n";
             }
             else {
-                // Copiar la línea tal como está si no es el paciente a editar
+                // Copiar la linea tal como esta si no es el paciente a editar
                 temp << linea << "\n";
             }
         }
@@ -394,20 +272,12 @@ void Paciente::editarPaciente(const std::string& dni) {
         temp.close();
 
         if (encontrado) {
-            // Sustituir el archivo original por el temporal
-            if (std::remove("pacientes.csv") != 0) {
-                std::cerr << "Error al eliminar el archivo original 'pacientes.csv'.\n";
-                return;
-            }
-
-            if (std::rename("temp.csv", "pacientes.csv") != 0) {
-                std::cerr << "Error al renombrar el archivo temporal.\n";
-                return;
-            }
+            std::remove("pacientes.csv");
+            std::rename("temp.csv", "pacientes.csv");
         }
         else {
             std::cout << "Paciente con DNI " << dni << " no encontrado.\n";
-            std::remove("temp.csv"); // Eliminar el archivo temporal si no se encontró el paciente
+            std::remove("temp.csv");
         }
     }
     else {
@@ -432,10 +302,10 @@ std::string Paciente::derivarPaciente(const std::string& centro) {
     if (archivo.is_open()) {
         archivo << dni << "," << centro << "," << codigo << "\n";
         archivo.close();
-        std::cout << "Paciente derivado al centro \"" << centro << "\" con el código: " << codigo << "\n";
+        std::cout << "Paciente derivado al centro \"" << centro << "\" con el codigo: " << codigo << "\n";
     }
     else {
-        std::cerr << "Error al guardar la derivación.\n";
+        std::cerr << "Error al guardar la derivacion.\n";
     }
 
     return codigo;

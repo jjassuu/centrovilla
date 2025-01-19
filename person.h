@@ -1,7 +1,15 @@
 #ifndef PERSON_H
 #define PERSON_H
-
 #include <string>
+#include <algorithm> // Para std::transform
+#include <cctype>    // Para std::toupper
+
+static std::string convertirAMayusculas(const std::string& cadena) {
+    std::string resultado = cadena;
+    std::transform(resultado.begin(), resultado.end(), resultado.begin(),
+        [](unsigned char c) { return std::toupper(c); });
+    return resultado;
+}
 
 class Person {
 protected:

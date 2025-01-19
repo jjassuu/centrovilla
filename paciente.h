@@ -2,6 +2,7 @@
 #define PACIENTE_H
 
 #include "person.h"
+#include "cita.h"
 #include <fstream>
 #include <sstream>
 #include <vector>
@@ -17,19 +18,11 @@ struct Dolencia {
 };
 class Paciente : public Person {
 private:
-    string dni;
-    string nombre;
-    int edad;
-    string telefono;
-    string direccion;
-    string email;
-    vector <Dolencia> historialDolencias;
-    string diacita;
 
 public:
     Paciente(const std::string& dni = "", const std::string& nombre = "", int edad = 0,
         const std::string& telefono = "", const std::string& direccion = "",
-        const std::string& email = "", const std::string& fechaCita = "");
+        const std::string& email = "");
 
     // Métodos
     void registrarPaciente();
@@ -37,7 +30,6 @@ public:
     static void buscarPaciente(const std::string& dni);
     void guardarEnArchivo() const;
     static void eliminarPaciente(const std::string& dni);
-    static bool validarDNI(const std::string& dni);
     static bool existePaciente(const std::string& dni); // Verifica si el DNI ya está registrado
     void editarPaciente(const std::string& dni);
     std::string derivarPaciente(const std::string& centro);
