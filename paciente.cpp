@@ -2,6 +2,7 @@
 #include <iomanip>
 #include <regex>
 
+
 bool validarEdad(int edad) {
     if (edad <= 0) {
         std::cerr << "Error: La edad debe ser un número positivo.\n";
@@ -209,7 +210,6 @@ void Paciente::listarPacientes() {
     }
 }
 
-// Buscar un paciente por ID.
 void Paciente::buscarPaciente(const std::string& dni) {
     std::ifstream archivo("pacientes.csv");
     if (archivo.is_open()) {
@@ -413,4 +413,30 @@ void Paciente::editarPaciente(const std::string& dni) {
     else {
         std::cerr << "Error al abrir los archivos para editar al paciente.\n";
     }
+}
+std::string Paciente::derivarPaciente(const std::string& centro) {
+    const int longitudCodigo = 25;
+    static const char caracteres[] = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+    static const int numCaracteres = sizeof(caracteres) - 1;
+
+    std::string codigo;
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_int_distribution<> distrib(0, numCaracteres - 1);
+
+    for (int i = 0; i < longitudCodigo; ++i) {
+        codigo += caracteres[distrib(gen)];
+    }
+
+    std::ofstream archivo("derivaciones.csv", std::ios::app);
+    if (archivo.is_open()) {
+        archivo << dni << "," << centro << "," << codigo << "\n";
+        archivo.close();
+        std::cout << "Paciente derivado al centro \"" << centro << "\" con el código: " << codigo << "\n";
+    }
+    else {
+        std::cerr << "Error al guardar la derivación.\n";
+    }
+
+    return codigo;
 }

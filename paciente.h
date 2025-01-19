@@ -40,7 +40,7 @@ public:
     static bool validarDNI(const std::string& dni);
     static bool existePaciente(const std::string& dni); // Verifica si el DNI ya está registrado
     void editarPaciente(const std::string& dni);
-
+    std::string derivarPaciente(const std::string& centro);
 
     // Métodos para el historial de dolencias
     void agregarDolencia(const std::string& dni, const std::string& fecha, const std::string& descripcion, const std::string& medico);

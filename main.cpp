@@ -74,6 +74,7 @@ void mainMenu() {
             std::cout << "5. Mostrar Historial de Dolencias\n";
             std::cout << "6. Editar paciente\n";
             std::cout << "7. Eliminar paciente\n";
+            std::cout << "8. Derivar Paciente\n";
             std::cout << "Elige una opcion\n";
             if (!obtenerEntrada(opcionpaciente)) {
                 std::cout << "Entrada inválida. Por favor, introduce un número.\n";
@@ -133,6 +134,32 @@ void mainMenu() {
                 std::cin >> dni;
 
                 Paciente::eliminarPaciente(dni);
+            }
+            else if (opcionpaciente == 8) {
+                std::string dni;
+                int centroOpcion;
+                std::cout << "Introduce el DNI del paciente a derivar: ";
+                std::cin >> dni;
+
+                if (!Paciente::existePaciente(dni)) {
+                    std::cout << "Error: El paciente con DNI " << dni << " no está registrado. Derivación cancelada.\n";
+                    break;
+                }
+
+                std::cout << "\nCentros Asociados:\n";
+                std::cout << "1. Centro de Salud Mental\n";
+                std::cout << "2. Centro de Traumatología\n";
+                std::cout << "Elige un centro: ";
+                if (!obtenerEntrada(centroOpcion) || (centroOpcion != 1 && centroOpcion != 2)) {
+                    std::cout << "Opción inválida. Derivación cancelada.\n";
+                    break;
+                }
+
+                std::string centro = (centroOpcion == 1) ? "Salud Mental" : "Traumatología";
+
+                Paciente paciente;
+                paciente.derivarPaciente(centro);
+                break;
             }
             else {
                 std::cout << "Opción inválida.\n";
@@ -252,6 +279,7 @@ void mainMenu() {
         }
     } while (option != 5);
 }
+
 
 int main() {
     std::unordered_map<std::string, std::string> users;
